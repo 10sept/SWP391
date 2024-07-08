@@ -106,20 +106,28 @@ public class ProductDao extends DBContext {
         return list;
     }
 
-    public void addProduct(Product product) {
-        String sql = "INSERT INTO Product (cid, bid, name, image, price, description, stock) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    public void addProduct(String name, String image, int price, String description, int stock,
+            int cid, int bid, String chip, String ram, String rom, String gpu) {
+        String sql = "INSERT INTO Product (cid, bid, name, image, price, description, stock, chip, ram, rom, gpu) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, product.getCategory().getId());
-            st.setInt(2, product.getBrand().getId());
-            st.setString(3, product.getName());
-            st.setString(4, product.getImage());
-            st.setDouble(5, product.getPrice()); // Use setDouble for the 'real' type in SQL
-            st.setString(6, product.getDescription());
-            st.setInt(7, product.getStock());
+            st.setInt(1, cid); // Set Category ID
+            st.setInt(2, bid); // Set Brand ID
+            st.setString(3, name);
+            st.setString(4, image);
+            st.setInt(5, price);
+            st.setString(6, description);
+            st.setInt(7, stock);
+            st.setString(8, chip);
+            st.setString(9, ram);
+            st.setString(10, rom);
+            st.setString(11, gpu);
+
             st.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e);
+            System.out.println("Error occurred while adding product: " + e.getMessage());
+            e.printStackTrace(); // Print the full stack trace for debugging purposes
         }
     }
 
