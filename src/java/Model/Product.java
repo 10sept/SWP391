@@ -7,21 +7,31 @@ public class Product {
     private int price;
     private String description;
     private int stock;
+    private String chip;
+    private String ram;
+    private String rom;
+    private String gpu;
     private Category category;
     private Brand brand;
+    private ProductVariant productVariant;
 
     public Product() {
     }
 
-    public Product(int id, String name, String image, int price, String description, int stock, Category category, Brand brand) {
+    public Product(int id, String name, String image, int price, String description, int stock, String chip, String ram, String rom, String gpu, Category category, Brand brand, ProductVariant productVariant) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.price = price;
         this.description = description;
         this.stock = stock;
+        this.chip = chip;
+        this.ram = ram;
+        this.rom = rom;
+        this.gpu = gpu;
         this.category = category;
         this.brand = brand;
+        this.productVariant = productVariant;
     }
 
     public int getId() {
@@ -72,6 +82,38 @@ public class Product {
         this.stock = stock;
     }
 
+    public String getChip() {
+        return chip;
+    }
+
+    public void setChip(String chip) {
+        this.chip = chip;
+    }
+
+    public String getRam() {
+        return ram;
+    }
+
+    public void setRam(String ram) {
+        this.ram = ram;
+    }
+
+    public String getRom() {
+        return rom;
+    }
+
+    public void setRom(String rom) {
+        this.rom = rom;
+    }
+
+    public String getGpu() {
+        return gpu;
+    }
+
+    public void setGpu(String gpu) {
+        this.gpu = gpu;
+    }
+
     public Category getCategory() {
         return category;
     }
@@ -88,9 +130,13 @@ public class Product {
         this.brand = brand;
     }
 
-    @Override
-    public String toString() {
-        return "Product{" + "id=" + id + ", name=" + name + ", image=" + image + ", price=" + price + ", description=" + description + ", stock=" + stock + ", category=" + category + ", brand=" + brand + '}';
+    public ProductVariant getProductVariant() {
+        return productVariant;
     }
-   
+
+    public void setProductVariant(ProductVariant productVariant) {
+        this.productVariant = productVariant;
+    }
+
+    
 }

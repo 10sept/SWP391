@@ -68,7 +68,7 @@ public class LoginServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
@@ -98,12 +98,15 @@ public class LoginServlet extends HttpServlet {
                     case 1:
                         response.sendRedirect("homeAdmin1.jsp");
                         break;
+                        case 3:
+                        response.sendRedirect("homeStaff.jsp");
+                        break;
                     case 4:
                         request.setAttribute("mess", "Tài khoản của bạn đã bị khóa do vi phạm quy định của Web");
                 request.getRequestDispatcher("login.jsp").forward(request, response);
                         break;
                     default:
-                        response.sendRedirect("home.jsp");
+                        response.sendRedirect("home");
                         break;
                 }
             }

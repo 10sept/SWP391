@@ -96,7 +96,7 @@
                         </li>
 	
                         <li>
-                            <a href="#">
+                            <a href="statistic">
                                 <img src="img/statistic.png" alt="Home" style="width: 35px; height: 35px; margin-left:5px;margin-right:10px;">
                                     Thống Kê
                             </a>

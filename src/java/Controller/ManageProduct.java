@@ -5,6 +5,8 @@
 
 package Controller;
 
+import Dal.BrandDao;
+import Dal.CategoryDao;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -16,6 +18,7 @@ import Model.Brand;
 import Model.Category;
 import Model.Product;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -34,15 +37,16 @@ public class ManageProduct extends HttpServlet {
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-           ProductDao pdao = new ProductDao();
-           ArrayList<Product> p1 = (ArrayList<Product>) pdao.getAllProductDetail();
-           request.setAttribute("p1", p1);
-           ArrayList<Category> cl = pdao.getCategory();
-           request.setAttribute("category", cl);
-           ArrayList<Brand> bl  = pdao.getBrand();
-           request.setAttribute("brand", bl);
-           request.getRequestDispatcher("productManage.jsp").forward(request, response);
-           
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet Logout</title>");  
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet Logout at " + request.getContextPath () + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
         }
     } 
 
@@ -56,9 +60,18 @@ public class ManageProduct extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        processRequest(request, response);
-    } 
+            throws ServletException, IOException {
+        ProductDao pdao = new ProductDao();
+        ArrayList<Product> product = (ArrayList<Product>) pdao.getAllProducts();
+        request.setAttribute("product", product);
+        CategoryDao cdao = new CategoryDao();
+        List<Category> cl = cdao.getAllCategory();
+        request.setAttribute("category", cl);
+        BrandDao bdao = new BrandDao();
+        List<Brand> list = bdao.getAllBrand();
+        request.setAttribute("brand", list);
+        request.getRequestDispatcher("productManage.jsp").forward(request, response);
+    }
 
     /** 
      * Handles the HTTP <code>POST</code> method.

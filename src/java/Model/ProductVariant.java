@@ -9,14 +9,12 @@ package Model;
  * @author ADMIN
  */
 public class ProductVariant {
-
     private int id;
     private Product product;
     private Color color;
     private int stock;
-
-    public ProductVariant() {
-    }
+    private int productId;
+    private int colorId;
 
     public ProductVariant(int id, Product product, Color color, int stock) {
         this.id = id;
@@ -25,12 +23,18 @@ public class ProductVariant {
         this.stock = stock;
     }
 
-    public ProductVariant(int id, Color color, int stock) {
+    public ProductVariant(int id, int stock, int productId, int colorId) {
         this.id = id;
-        this.color = color;
         this.stock = stock;
+        this.productId = productId;
+        this.colorId = colorId;
+    }
+
+
+    public ProductVariant() {
     }
     
+    // Getters and setters
     public int getId() {
         return id;
     }
@@ -63,4 +67,19 @@ public class ProductVariant {
         this.stock = stock;
     }
 
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
+
+    public int getColorId() {
+        return colorId;
+    }
+
+    public void setColorId(int colorId) {
+        this.colorId = colorId;
+    }
 }

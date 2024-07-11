@@ -53,13 +53,13 @@ public class Logout extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         HttpSession session = request.getSession();
         if (session.getAttribute("acc") != null) {
             session.removeAttribute("acc");
         }
-        response.sendRedirect("login.jsp");
-    } 
+        response.sendRedirect("home");
+    }
 
     /** 
      * Handles the HTTP <code>POST</code> method.

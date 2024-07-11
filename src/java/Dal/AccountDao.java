@@ -11,6 +11,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -86,8 +88,8 @@ public class AccountDao extends DBContext {
         }
     }
 
-    public void insertUser(String email, String pass, String fullName, String phone, String address, int roleId, String gender, java.util.Date dateOfBirth) {
-        String query = "INSERT INTO [dbo].[Users] (email, pass, fullName, phone, address, roleId, gender, dateOfBirth) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    public void insertUser(String email, String pass, String fullName, String phone, String address, int roleId, String gender, java.util.Date dob) {
+        String query = "INSERT INTO [dbo].[Users] (email, pass, fullName, phone, address, roleId, gender, dob) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, email);
@@ -97,7 +99,7 @@ public class AccountDao extends DBContext {
             ps.setString(5, address);
             ps.setInt(6, roleId);
             ps.setString(7, gender);
-            ps.setDate(8, new java.sql.Date(dateOfBirth.getTime())); // Chuyển đổi java.util.Date sang java.sql.Date
+            ps.setDate(8, new java.sql.Date(dob.getTime())); // Chuyển đổi java.util.Date sang java.sql.Date
             ps.executeUpdate();
             System.out.println("User inserted successfully.");
         } catch (SQLException e) {
@@ -203,7 +205,6 @@ public class AccountDao extends DBContext {
         String deleteOrdersSQL = "DELETE FROM [Order] WHERE userId = ?";
         String deleteFeedbackSQL = "DELETE FROM Feedback WHERE userId = ?";
         String deleteCartSQL = "DELETE FROM Cart WHERE userId = ?";
-        String deleteProductCartSQL = "DELETE FROM ProductCart WHERE cartId IN (SELECT id FROM Cart WHERE userId = ?)";
         String deleteUserSQL = "DELETE FROM Users WHERE id = ?";
         try {
             // Start transaction
@@ -233,11 +234,6 @@ public class AccountDao extends DBContext {
             PreparedStatement stCart = connection.prepareStatement(deleteCartSQL);
             stCart.setInt(1, uid);
             stCart.executeUpdate();
-
-            // Delete product cart
-            PreparedStatement stProductCart = connection.prepareStatement(deleteProductCartSQL);
-            stProductCart.setInt(1, uid);
-            stProductCart.executeUpdate();
 
             // Delete user
             PreparedStatement stUser = connection.prepareStatement(deleteUserSQL);
@@ -321,22 +317,7 @@ public class AccountDao extends DBContext {
     }
 
     public static void main(String[] args) {
-        int userId = 2;
-
-        // Test data for updating the user's profile
-        String mail = "longvupp@gmail.com";
-        String pass = "123";
-        String fullName = "Updated Name";
-        String phone = "1234567890";
-        String address = "123 Updated Street";
-        String gender = "Male";
-        String dob = "1990-01-30";
-
-        
-
-        AccountDao ad = new AccountDao();
-       
-        ad.GetAccount("longvupp@gmail.com", "123");
-        
+        AccountDao ac = new AccountDao();
+        ac.deleteUserWithOrders(5);
     }
 }

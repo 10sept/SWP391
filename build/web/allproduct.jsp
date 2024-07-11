@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -28,6 +29,7 @@
 
         <!-- Custom stlylesheet -->
         <link type="text/css" rel="stylesheet" href="css/style.css"/>
+
 
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -71,7 +73,18 @@
         .dropdown:hover .dropdown-content {
             display: block;
         }
-
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
     </style>
     <body>
         <!-- HEADER -->
@@ -187,8 +200,8 @@
                 <div id="responsive-nav">
                     <!-- NAV -->
                     <ul class="main-nav nav navbar-nav">
-                        <li class="active"><a href="home.jsp">Home</a></li>
-                        <li><a href="allproduct">All Product</a></li>
+                        <li ><a href="home">Home</a></li>
+                        <li class="active"><a href="allproduct">All Product</a></li>
 
                     </ul>
                     <!-- /NAV -->
@@ -316,32 +329,28 @@
                                         <div class="product-img">
                                             <img src="${p.image}" alt="">
                                             <div class="product-label">
-                                                <span class="sale">-30%</span>
+                                                <span class="sale">-5%</span>
                                                 <span class="new">NEW</span>
                                             </div>
                                         </div>
                                         <div class="product-body">
                                             <p class="product-category">Category</p>
-                                            <h3 class="product-name"><a href="#">${p.name}</a></h3>
-                                            <h4 class="product-price">${p.price} <del class="product-old-price">$990.00</del></h4>
+                                            <h3 class="product-name" style="height: 60px"><a href="productdetail?pid=${p.id}">${p.name}</a></h3>
+                                            <h4 class="product-price"><fmt:formatNumber value="${p.price}" type="currency"  maxFractionDigits="0" currencySymbol=""/>₫ <del class="product-old-price"><fmt:formatNumber value="${p.price + p.price*0.05}" type="currency"  maxFractionDigits="0" currencySymbol=""/>₫</del></h4>
                                             <div class="product-rating">
                                                 <i class="fa fa-star"></i>
                                                 <i class="fa fa-star"></i>
                                                 <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i> 
                                                 <i class="fa fa-star"></i>
                                             </div>
                                             <div class="product-btns">
                                                 <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-                                                <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-                                                <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
+                                                
+                                      
                                             </div>
                                         </div>
-                                        <div class="add-to-cart">
-                                            <button class="add-to-cart-btn" onclick="addToCart(${p.id})">
-                                                <i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng
-                                            </button>
-                                        </div>
+                                        
                                     </div>
                                 </div>
                             </c:forEach>
@@ -525,21 +534,6 @@
             <script src="js/jquery.zoom.min.js"></script>
             <script src="js/main.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-            <script>
-                                        function addToCart(pid) {
-                                            $.ajax({
-                                                url: 'cart', // Replace with the actual URL of your servlet
-                                                type: 'POST',
-                                                data: {pid: pid},
-                                                success: function (response) {
-                                                    // Optionally update the cart UI or show a notification
-                                                    alert('Product added to cart successfully!');
-                                                },
-                                                error: function (error) {
-                                                    console.error('Error adding product to cart:', error);
-                                                }
-                                            });
-                                        }
-            </script>
+
     </body>
 </html>

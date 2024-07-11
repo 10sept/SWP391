@@ -7,8 +7,10 @@ package Controller;
 
 import Dal.BrandDao;
 import Dal.CategoryDao;
+import Dal.ProductDao;
 import Model.Brand;
 import Model.Category;
+import Model.Product;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -57,7 +59,10 @@ public class HomeServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
+        ProductDao product = new ProductDao();
+        List<Product> listProductCategopry = product.searchByCategory(1);
+        request.setAttribute("listProductCategopry", listProductCategopry);
         BrandDao bd = new BrandDao();
         List<Brand> listBrand = bd.getAllBrand();
         request.setAttribute("listBrand", listBrand);
@@ -65,10 +70,12 @@ public class HomeServlet extends HttpServlet {
         List<Category> listCategory = cd.getAllCategory();
         request.setAttribute("listCategory", listCategory);
         request.getRequestDispatcher("home.jsp").forward(request, response);
-    } 
 
-    /** 
+    }
+
+    /**
      * Handles the HTTP <code>POST</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -76,8 +83,19 @@ public class HomeServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        processRequest(request, response);
+            throws ServletException, IOException {
+        String categoryIdStr = request.getParameter("categoryId");
+        int categoryId = Integer.parseInt(categoryIdStr);
+        ProductDao product = new ProductDao();
+        List<Product> listProductCategopry = product.searchByCategory(categoryId);
+        request.setAttribute("listProductCategopry", listProductCategopry);
+        BrandDao bd = new BrandDao();
+        List<Brand> listBrand = bd.getAllBrand();
+        request.setAttribute("listBrand", listBrand);
+        CategoryDao cd = new CategoryDao();
+        List<Category> listCategory = cd.getAllCategory();
+        request.setAttribute("listCategory", listCategory);
+        request.getRequestDispatcher("home.jsp").forward(request, response);
     }
 
     /** 

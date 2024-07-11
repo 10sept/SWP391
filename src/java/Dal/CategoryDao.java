@@ -115,6 +115,26 @@ public class CategoryDao extends DBContext {
         }
         return message;
     }
+    public List<Category> getCategoryCounts() throws Exception {
+        List<Category> list = new ArrayList<>();
+        String sql = "SELECT c.id, c.name, COUNT(p.id) AS count " +
+                     "FROM Category c LEFT JOIN Product p ON c.id = p.cid " +
+                     "GROUP BY c.id, c.name";
+
+        try (PreparedStatement st = connection.prepareStatement(sql);
+             ResultSet rs = st.executeQuery()) {
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                int count = rs.getInt("count");
+                list.add(new Category(id, name, count));
+            }
+        } catch (SQLException e) {
+            throw new Exception("Error retrieving category counts", e);
+        }
+
+        return list;
+    }
 
     public static void main(String[] args) {
 
