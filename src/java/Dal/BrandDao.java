@@ -109,6 +109,27 @@ public class BrandDao extends DBContext {
         }
         return message;
     }
+    public List<Brand> getBrandCounts() throws Exception {
+        List<Brand> list = new ArrayList<>();
+        String sql = "SELECT b.id, b.name, COUNT(p.id) AS count \n"
+                + "                 FROM Brand b \n"
+                + "                 LEFT JOIN Product p ON b.id = p.bid\n"
+                + "                 GROUP BY b.id, b.name";
+
+        try (PreparedStatement st = connection.prepareStatement(sql); ResultSet rs = st.executeQuery()) {
+            while (rs.next()) {
+                Brand a = new Brand();
+                a.setId(rs.getInt(1));
+                a.setName(rs.getString(2));
+                a.setCount(rs.getInt(3));
+                list.add(a);
+            }
+        } catch (Exception e) {
+            throw new Exception("Error retrieving category counts", e);
+        }
+
+        return list;
+    }
 
     public static void main(String[] args) {
         BrandDao bd = new BrandDao();

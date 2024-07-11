@@ -49,64 +49,64 @@ Author     : ADMIN
         </nav>   
         <!-- /. NAV TOP  -->
         <nav class="navbar-default navbar-side" role="navigation">
-                <div class="sidebar-collapse">
-                    <ul class="nav" id="main-menu">
-                        <li class="text-center">
-                            <img src="img/logo1.png" class="user-image img-responsive" />
-                        </li>
-                        <li>
-                            <a href="homeAdmin1.jsp">
-                                <img src="img/home.png" alt="Home" style="width: 35px; height: 35px; margin-left:5px;margin-right:10px;">
-                                    Trang chủ
-                            </a>
-                        </li>
-                        <li>
-                            <a href="manageproduct">
-                                <img src="img/iconpm.png" alt="Home" style="width: 38px; height: 38px; margin-left:5px;margin-right:7px;">
-                                    Quản Lý Sản Phẩm
-                            </a>
-                        </li>
-                        <li>
-                            <a href="brandmanagerment">
-                                <img src="img/iconbrand.png" alt="Home" style="width: 40px; height: 40px; margin-left:5px;margin-right:5px;">
-                                    Quản Lý Nhãn Hàng
-                            </a>
-                        </li>
-                        <li>
-                            <a href="categorymanagerment">
-                                <img src="img/iconcategory.png" alt="Home" style="width: 40px; height: 40px; margin-left:5px;margin-right:5px;">
-                                    Quản Lý Loại Sản Phẩm
-                            </a>
-                        </li>
-                        <li>
-                            <a href="accountmanagerment">
-                                <img src="img/iconuser.png" alt="Home" style="width: 35px; height: 35px; margin-left:5px;margin-right:10px;">
-                                    Quản Lý Tài Khoản
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <img src="img/iconorder.png" alt="Home" style="width: 35px; height: 35px; margin-left:5px;margin-right:10px;">
-                                    Quản Lý Đơn Hàng
-                            </a>
-                        </li>
-	
-                        <li>
-                            <a href="#">
-                                <img src="img/statistic.png" alt="Home" style="width: 35px; height: 35px; margin-left:5px;margin-right:10px;">
-                                    Thống Kê
-                            </a>
-                        </li>
-                        <li>
-                            <a href="roleManagerment.jsp">
-                                <img src="img/role.png" alt="Home" style="width: 30px; height: 30px; margin-left:5px;margin-right:15px;">
-                                    Phân Quyền
-                            </a>
-                        </li>				
+            <div class="sidebar-collapse">
+                <ul class="nav" id="main-menu">
+                    <li class="text-center">
+                        <img src="img/logo1.png" class="user-image img-responsive" />
+                    </li>
+                    <li>
+                        <a href="homeAdmin1.jsp">
+                            <img src="img/home.png" alt="Home" style="width: 35px; height: 35px; margin-left:5px;margin-right:10px;">
+                                Trang chủ
+                        </a>
+                    </li>
+                    <li>
+                        <a href="manageproduct">
+                            <img src="img/iconpm.png" alt="Home" style="width: 38px; height: 38px; margin-left:5px;margin-right:7px;">
+                                Quản Lý Sản Phẩm
+                        </a>
+                    </li>
+                    <li>
+                        <a href="brandmanagerment">
+                            <img src="img/iconbrand.png" alt="Home" style="width: 40px; height: 40px; margin-left:5px;margin-right:5px;">
+                                Quản Lý Nhãn Hàng
+                        </a>
+                    </li>
+                    <li>
+                        <a href="categorymanagerment">
+                            <img src="img/iconcategory.png" alt="Home" style="width: 40px; height: 40px; margin-left:5px;margin-right:5px;">
+                                Quản Lý Loại Sản Phẩm
+                        </a>
+                    </li>
+                    <li>
+                        <a href="accountmanagerment">
+                            <img src="img/iconuser.png" alt="Home" style="width: 35px; height: 35px; margin-left:5px;margin-right:10px;">
+                                Quản Lý Tài Khoản
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img src="img/iconorder.png" alt="Home" style="width: 35px; height: 35px; margin-left:5px;margin-right:10px;">
+                                Quản Lý Đơn Hàng
+                        </a>
+                    </li>
 
-                    </ul>
-                </div>
-            </nav> 
+                    <li>
+                        <a href="statistic">
+                            <img src="img/statistic.png" alt="Home" style="width: 35px; height: 35px; margin-left:5px;margin-right:10px;">
+                                Thống Kê
+                        </a>
+                    </li>
+                    <li>
+                        <a href="roleManagerment.jsp">
+                            <img src="img/role.png" alt="Home" style="width: 30px; height: 30px; margin-left:5px;margin-right:15px;">
+                                Phân Quyền
+                        </a>
+                    </li>				
+
+                </ul>
+            </div>
+        </nav> 
         <!-- /. NAV SIDE  -->
         <div id="page-wrapper">
             <div id="page-inner">

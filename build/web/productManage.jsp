@@ -16,11 +16,11 @@
         <!-- GOOGLE FONTS-->
         <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
         <!-- TABLE STYLES-->
-<!--        <link href="assets/js/dataTables/dataTables.bootstrap.css" rel="stylesheet" />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
+        <!--        <link href="assets/js/dataTables/dataTables.bootstrap.css" rel="stylesheet" />
+                <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+                <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
         <script>
             $(document).ready(function () {
                 let deleteUrl;
@@ -36,6 +36,28 @@
                 });
             });
         </script>
+        <style>
+            .btn-green{
+                background-color: #28a745;
+                color: white;
+            }
+            .btn-add-product {
+                padding: 10px 20px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                border: none;
+                border-radius: 5px;
+                transition: background-color 0.3s ease;
+                margin-bottom: 10px;
+            }
+
+            .btn-add-product:hover {
+                background-color: #218838; /* Màu xanh đậm hơn khi hover */
+            }
+        </style>
+
     </head>
     <body>
         <div id="wrapper">
@@ -64,50 +86,50 @@
                         <li>
                             <a href="homeAdmin1.jsp">
                                 <img src="img/home.png" alt="Home" style="width: 35px; height: 35px; margin-left:5px;margin-right:10px;">
-                                    Trang chủ
+                                Trang chủ
                             </a>
                         </li>
                         <li>
                             <a href="manageproduct">
                                 <img src="img/iconpm.png" alt="Home" style="width: 38px; height: 38px; margin-left:5px;margin-right:7px;">
-                                    Quản Lý Sản Phẩm
+                                Quản Lý Sản Phẩm
                             </a>
                         </li>
                         <li>
                             <a href="brandmanagerment">
                                 <img src="img/iconbrand.png" alt="Home" style="width: 40px; height: 40px; margin-left:5px;margin-right:5px;">
-                                    Quản Lý Nhãn Hàng
+                                Quản Lý Nhãn Hàng
                             </a>
                         </li>
                         <li>
                             <a href="categorymanagerment">
                                 <img src="img/iconcategory.png" alt="Home" style="width: 40px; height: 40px; margin-left:5px;margin-right:5px;">
-                                    Quản Lý Loại Sản Phẩm
+                                Quản Lý Loại Sản Phẩm
                             </a>
                         </li>
                         <li>
                             <a href="accountmanagerment">
                                 <img src="img/iconuser.png" alt="Home" style="width: 35px; height: 35px; margin-left:5px;margin-right:10px;">
-                                    Quản Lý Tài Khoản
+                                Quản Lý Tài Khoản
                             </a>
                         </li>
                         <li>
                             <a href="#">
                                 <img src="img/iconorder.png" alt="Home" style="width: 35px; height: 35px; margin-left:5px;margin-right:10px;">
-                                    Quản Lý Đơn Hàng
+                                Quản Lý Đơn Hàng
                             </a>
                         </li>
-	
+
                         <li>
-                            <a href="#">
+                            <a href="statistic">
                                 <img src="img/statistic.png" alt="Home" style="width: 35px; height: 35px; margin-left:5px;margin-right:10px;">
-                                    Thống Kê
+                                Thống Kê
                             </a>
                         </li>
                         <li>
                             <a href="roleManagerment.jsp">
                                 <img src="img/role.png" alt="Home" style="width: 30px; height: 30px; margin-left:5px;margin-right:15px;">
-                                    Phân Quyền
+                                Phân Quyền
                             </a>
                         </li>				
 
@@ -122,104 +144,74 @@
                                 <div class="table-title">
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <a style="background-color: #000; margin-bottom: 15px" href="#addEmployeeModal" class="btn btn-success" data-toggle="modal">
-                                                <i class="material-icons">&#xE147;</i> <span>Add New Product</span>
-                                            </a>
+                                            <a href="addproduct" class="btn-add-product btn-green"> ADD Product</a>
                                         </div>
                                     </div>
                                 </div>
                                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                     <thead>
                                         <tr>
-                                            <th>Image</th>
-                                            <th>Name</th>
-                                            <th>Brand</th>
-                                            <th>Category</th>
-                                            <th>Price</th>
-                                            <th>Stock</th>
-                                            <th style="padding-right: 20px">Actions</th>
+                                            <th>Hình ảnh</th>
+                                            <th>Tên sản phẩn</th>
+                                            <th>Loại</th>
+                                            <th>Nhãn hàng</th>
+                                            <th>Giá</th>
+                                            <th>Số lượng</th>
+                                            <th>Chip</th>
+                                            <th>RAM</th>
+                                            <th>ROM</th>
+                                            <th>GPU</th>
+                                            <th style="padding-right: 20px">Chức Năng</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <c:forEach var="c" items="${p1}">
+                                        <c:forEach var="product" items="${product}">
                                             <tr>
                                                 <td>
                                                     <a class="product-img">
-                                                        <img style="width: 5rem; height: 5rem;" src="${c.image}" alt="product">
+                                                        <img style="width: 5rem; height: 5rem;" src="${product.image}" alt="product">
                                                     </a>
                                                 </td>
-                                                <td>${c.name}</td>
-                                                <td>${c.brand.name}</td>
-                                                <td>${c.category.name}</td>
-                                                <td>${c.price}</td>
-                                                <td>${c.stock}</td>
+                                                <td>${product.name}</td>
+                                                <td>${product.category.name}</td>
+                                                <td>${product.brand.name}</td>
+                                                <td>${product.price}</td>
+                                                <td>${product.stock}</td>
+                                                <td>${product.chip}</td>
+                                                <td>${product.ram}</td>
+                                                <td>${product.rom}</td>
+                                                <td>${product.gpu}</td>
+
                                                 <td>
-                                                    <a href="updateproduct?id=${c.id}" class="edit"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-                                                    <a href="deleteproduct?id=${c.id}" class="delete">
-                                                        <i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i>
-                                                    </a>
+                                                    <button class="btn btn-green btn-xs" onclick="addStock('${product.id}')">Thêm số lượng</button>
+                                                    <button class="btn btn-primary btn-xs" onclick="editProduct('${product.id}')">chỉnh sửa</button>
+                                                    <button class="btn btn-danger btn-xs" onclick="deleteProduct('${product.id}')">Xoá sản phẩm</button>
                                                 </td>
-                                            </tr>
-                                        </c:forEach>
+
+                                        <script>
+                                            function addStock(id) {
+                                                window.location.href = 'addquantityproduct?id=' + id;
+                                            }
+                                            function editProduct(id) {
+                                                window.location.href = 'updateproduct?id=' + id;
+                                            }
+
+                                            function deleteProduct(id) {
+                                                if (confirm('Are you sure you want to delete this product?')) {
+                                                    window.location.href = 'deleteproduct?id=' + id;
+                                                }
+                                            }
+                                        </script>
+                                        </tr>
+                                    </c:forEach>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-                    <div id="addEmployeeModal" class="modal fade">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <form action="addproduct" method="Post">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title">Add Product</h4>
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="form-group">
-                                            <label>Name</label>
-                                            <input type="text" name="name" class="form-control" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Image</label>
-                                            <input type="text" name="image" class="form-control" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Brand</label>
-                                            <select name="brand">
-                                                <c:forEach var="o" items="${brand}">
-                                                    <option value="${o.id}">${o.name}</option>
-                                                </c:forEach>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Category</label>
-                                            <select name="category">
-                                                <c:forEach var="o" items="${category}">
-                                                    <option value="${o.id}">${o.name}</option>
-                                                </c:forEach>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Price</label>
-                                            <input type="text" name="price" class="form-control" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Stock</label>
-                                            <input type="number" name="stock" class="form-control" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Description</label>
-                                            <textarea name="description" class="form-control" required></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                                        <input type="submit" class="btn btn-success" value="Add">
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- ADD -->
+
+                    <!-- /ADD -->
                     <!-- Delete Confirmation Modal -->
                     <div id="deleteConfirmationModal" class="modal fade">
                         <div class="modal-dialog">
@@ -253,9 +245,9 @@
         <script src="assets/js/dataTables/jquery.dataTables.js"></script>
         <script src="assets/js/dataTables/dataTables.bootstrap.js"></script>
         <script>
-            $(document).ready(function () {
-                $('#dataTables-example').dataTable();
-            });
+                                            $(document).ready(function () {
+                                                $('#dataTables-example').dataTable();
+                                            });
         </script>
         <!-- CUSTOM SCRIPTS -->
         <script src="assets/js/custom.js"></script>

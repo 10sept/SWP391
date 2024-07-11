@@ -94,7 +94,7 @@
                         <img class="profile-picture" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg" alt="Profile Picture">
                         <span class="font-weight-bold"></span>
                         <button class="btn btn-secondary profile-button edit-button" type="button" onclick="window.location.href = 'changePassword.jsp'">Thay đổi mật khẩu</button>
-                        <button class="btn btn-secondary profile-button edit-button" type="button" onclick="window.location.href = 'home.jsp'">Quay về trang chủ</button>
+                        <button class="btn btn-secondary profile-button edit-button" type="button" onclick="window.location.href = 'home'">Quay về trang chủ</button>
                         <span> </span>
                     </div>
                 </div>

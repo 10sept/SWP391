@@ -76,7 +76,7 @@
                                 <div class="mb-md-5 mt-md-4 pb-5">
 
                                     <h2 class="fw-bold">
-                                        <a href="home.jsp"><img src="./img/logo2.png" alt="Logo" class="logo"></a>
+                                        <a href="home"><img src="./img/logo2.png" alt="Logo" class="logo"></a>
                                     </h2>
                                     <center>
                                         <p style="color: red">${mess}</p>
