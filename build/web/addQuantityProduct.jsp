@@ -133,15 +133,25 @@ Author     : ADMIN
                                         </div>
                                         <div class="form-group">
                                             <label>Số lượng</label>
-                                            <input type="number" class="form-control" name="stock" required />
+                                            <input type="number" class="form-control" name="stock" id="stockInput" required />
                                         </div>
+                                        <script>
+                                            document.getElementById('stockInput').addEventListener('input', function () {
+                                                if (this.value <= 0) {
+                                                    this.setCustomValidity('Số lượng phải lớn hơn 0');
+                                                } else {
+                                                    this.setCustomValidity('');
+                                                }
+                                            });
+                                        </script>
                                         <button type="submit" class="btn btn-primary">Thêm số lượng sản phẩm</button>
                                 </form>
 
-
                             </div>
+
                         </div>
                         <!-- End Form Elements -->
+                        <a href="manageproduct" class="btn btn-danger">Quay lại trước</a>
                     </div>
                 </div>
                 <!--End Advanced Tables -->
@@ -164,9 +174,9 @@ Author     : ADMIN
 <script src="assets/js/dataTables/jquery.dataTables.js"></script>
 <script src="assets/js/dataTables/dataTables.bootstrap.js"></script>
 <script>
-    $(document).ready(function () {
-        $('#dataTables-example').dataTable();
-    });
+                                            $(document).ready(function () {
+                                                $('#dataTables-example').dataTable();
+                                            });
 </script>
 <!-- CUSTOM SCRIPTS -->
 <script src="assets/js/custom.js"></script>

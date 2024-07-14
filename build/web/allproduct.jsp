@@ -324,35 +324,37 @@
 
                             <!-- product -->
                             <c:forEach items="${listProducts}" var="p">
-                                <div class="col-md-4 col-xs-6">
-                                    <div class="product">
-                                        <div class="product-img">
-                                            <img src="${p.image}" alt="">
-                                            <div class="product-label">
-                                                <span class="sale">-5%</span>
-                                                <span class="new">NEW</span>
+                                <c:if test="${p.isHidden == 0}">
+                                    <div class="col-md-4 col-xs-6">
+                                        <div class="product">
+                                            <div class="product-img">
+                                                <img src="${p.image}" alt="">
+                                                <div class="product-label">
+                                                    <span class="sale">-5%</span>
+                                                    <span class="new">NEW</span>
+                                                </div>
                                             </div>
+                                            <div class="product-body">
+                                                <p class="product-category">Category</p>
+                                                <h3 class="product-name" style="height: 60px"><a href="productdetail?pid=${p.id}">${p.name}</a></h3>
+                                                <h4 class="product-price"><fmt:formatNumber value="${p.price}" type="currency"  maxFractionDigits="0" currencySymbol=""/>₫ <del class="product-old-price"><fmt:formatNumber value="${p.price + p.price*0.05}" type="currency"  maxFractionDigits="0" currencySymbol=""/>₫</del></h4>
+                                                <div class="product-rating">
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i> 
+                                                    <i class="fa fa-star"></i>
+                                                </div>
+                                                <div class="product-btns">
+                                                    <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
+
+
+                                                </div>
+                                            </div>
+
                                         </div>
-                                        <div class="product-body">
-                                            <p class="product-category">Category</p>
-                                            <h3 class="product-name" style="height: 60px"><a href="productdetail?pid=${p.id}">${p.name}</a></h3>
-                                            <h4 class="product-price"><fmt:formatNumber value="${p.price}" type="currency"  maxFractionDigits="0" currencySymbol=""/>₫ <del class="product-old-price"><fmt:formatNumber value="${p.price + p.price*0.05}" type="currency"  maxFractionDigits="0" currencySymbol=""/>₫</del></h4>
-                                            <div class="product-rating">
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i> 
-                                                <i class="fa fa-star"></i>
-                                            </div>
-                                            <div class="product-btns">
-                                                <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-                                                
-                                      
-                                            </div>
-                                        </div>
-                                        
                                     </div>
-                                </div>
+                                </c:if>
                             </c:forEach>
                             <!-- /product -->
 
