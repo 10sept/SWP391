@@ -120,61 +120,29 @@ public class ProductDao extends DBContext {
     }
 
     // Delete a product by id
-    public void deleteProduct(int productId) {
-        String deleteFeedback = "DELETE FROM Feedback WHERE pid = ?";
-        String deleteOrderDetail = "DELETE FROM OrderDetail WHERE pid = ?";
-        String deleteCart = "DELETE FROM Cart WHERE pid = ?";  // Assuming pid refers to the product ID in the Cart table
-        String deleteProductVariant = "DELETE FROM ProductVariant WHERE pId = ?";
-        String deleteProduct = "DELETE FROM Product WHERE id = ?";
+    public int hideProduct(int productId) {
+        String sql = "UPDATE Product SET isHidden = 1 WHERE id = ?";
 
-        try {
-            connection.setAutoCommit(false); // Start transaction
-
-            // Delete related records in Feedback
-            try (PreparedStatement psFeedback = connection.prepareStatement(deleteFeedback)) {
-                psFeedback.setInt(1, productId);
-                psFeedback.executeUpdate();
-            }
-
-            // Delete related records in OrderDetail
-            try (PreparedStatement psOrderDetail = connection.prepareStatement(deleteOrderDetail)) {
-                psOrderDetail.setInt(1, productId);
-                psOrderDetail.executeUpdate();
-            }
-
-            // Delete related records in Cart
-            try (PreparedStatement psCart = connection.prepareStatement(deleteCart)) {
-                psCart.setInt(1, productId);
-                psCart.executeUpdate();
-            }
-
-            // Delete related records in ProductVariant
-            try (PreparedStatement psProductVariant = connection.prepareStatement(deleteProductVariant)) {
-                psProductVariant.setInt(1, productId);
-                psProductVariant.executeUpdate();
-            }
-
-            // Finally, delete the product
-            try (PreparedStatement psProduct = connection.prepareStatement(deleteProduct)) {
-                psProduct.setInt(1, productId);
-                psProduct.executeUpdate();
-            }
-
-            connection.commit(); // Commit transaction if all statements are successful
-            System.out.println("Product and related records deleted successfully!");
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, productId);
+            int rowsUpdated = statement.executeUpdate();
+            return rowsUpdated > 0 ? 1 : 0;
         } catch (SQLException e) {
-            try {
-                connection.rollback(); // Rollback transaction in case of error
-            } catch (SQLException rollbackEx) {
-                System.out.println("Rollback failed: " + rollbackEx.getMessage());
-            }
-            System.out.println("Error while deleting product: " + e.getMessage());
-        } finally {
-            try {
-                connection.setAutoCommit(true); // Restore default auto-commit mode
-            } catch (SQLException ex) {
-                System.out.println("Failed to restore auto-commit mode: " + ex.getMessage());
-            }
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public int showProduct(int productId) {
+        String sql = "UPDATE Product SET isHidden = 0 WHERE id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, productId);
+            int rowsUpdated = statement.executeUpdate();
+            return rowsUpdated > 0 ? 1 : 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
         }
     }
 
@@ -247,7 +215,6 @@ public class ProductDao extends DBContext {
         }
         return product;
     }
-
 
     public int sumStockByProductId(int pId) {
         int totalStock = 0;
@@ -326,7 +293,9 @@ public class ProductDao extends DBContext {
 
     public List<Product> searchByCategory(int categoryId) {
         List<Product> searchResult = new ArrayList<>();
-        String sql = "SELECT p.id AS product_id, p.name AS product_name, p.image AS product_image, p.price AS product_price, p.description AS product_description, p.stock AS product_stock, "
+        String sql = "SELECT p.id AS product_id, p.name AS product_name, p.image AS product_image, p.price AS product_price, "
+                + "p.description AS product_description, p.stock AS product_stock, p.chip AS product_chip, "
+                + "p.ram AS product_ram, p.rom AS product_rom, p.gpu AS product_gpu, p.isHidden AS product_isHidden, "
                 + "b.id AS brand_id, b.name AS brand_name, "
                 + "c.id AS category_id, c.name AS category_name "
                 + "FROM Product p "
@@ -348,8 +317,14 @@ public class ProductDao extends DBContext {
                 p.setPrice(rs.getInt("product_price"));
                 p.setDescription(rs.getString("product_description"));
                 p.setStock(rs.getInt("product_stock"));
+                p.setChip(rs.getString("product_chip"));
+                p.setRam(rs.getString("product_ram"));
+                p.setRom(rs.getString("product_rom"));
+                p.setGpu(rs.getString("product_gpu"));
+                p.setIsHidden(rs.getInt("product_isHidden"));
                 p.setBrand(brand);
                 p.setCategory(category);
+
                 searchResult.add(p);
             }
         } catch (SQLException e) {
@@ -505,6 +480,7 @@ public class ProductDao extends DBContext {
                 p.setPrice(rs.getInt("price"));
                 p.setDescription(rs.getString("description"));
                 p.setStock(rs.getInt("stock"));
+                p.setIsHidden(rs.getInt("isHidden"));
                 list.add(p);
             }
         } catch (SQLException ex) {
@@ -579,7 +555,7 @@ public class ProductDao extends DBContext {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT p.id AS product_id, p.name AS product_name, p.image AS product_image, p.price AS product_price, "
                 + "p.description AS product_description, p.stock AS product_stock, "
-                + "p.chip AS product_chip, p.ram AS product_ram, p.rom AS product_rom, p.gpu AS product_gpu, "
+                + "p.chip AS product_chip, p.ram AS product_ram, p.rom AS product_rom, p.gpu AS product_gpu, p.isHidden AS product_isHidden, "
                 + "b.id AS brand_id, b.name AS brand_name, "
                 + "c.id AS category_id, c.name AS category_name "
                 + "FROM Product p "
@@ -597,27 +573,14 @@ public class ProductDao extends DBContext {
                 p.setName(rs.getString("product_name"));
                 p.setImage(rs.getString("product_image"));
 
-                // Xử lý giá trị product_price
-                String priceStr = rs.getString("product_price");
-                if (priceStr != null) {
-                    priceStr = priceStr.replace(".", ""); // Loại bỏ dấu chấm
-                    try {
-                        int price = Integer.parseInt(priceStr);
-                        p.setPrice(price);
-                    } catch (NumberFormatException e) {
-                        System.out.println("Lỗi chuyển đổi giá trị price: " + e.getMessage());
-                        p.setPrice(0); // Hoặc giá trị mặc định khác nếu cần
-                    }
-                } else {
-                    p.setPrice(0); // Hoặc giá trị mặc định khác nếu cần
-                }
-
+                p.setPrice(rs.getInt("product_price"));
                 p.setDescription(rs.getString("product_description"));
                 p.setStock(rs.getInt("product_stock"));
                 p.setChip(rs.getString("product_chip"));
                 p.setRam(rs.getString("product_ram"));
                 p.setRom(rs.getString("product_rom"));
                 p.setGpu(rs.getString("product_gpu"));
+                p.setIsHidden(rs.getInt("product_isHidden"));
                 p.setBrand(brand);
                 p.setCategory(category);
 
@@ -685,6 +648,7 @@ public class ProductDao extends DBContext {
 
         return list;
     }
+
     public ProductVariant getProductVariantByID(int id) {
         ProductVariant productVariant = null;
         String query = "SELECT * FROM ProductVariant WHERE id = ?";
@@ -706,7 +670,7 @@ public class ProductDao extends DBContext {
 
         return productVariant;
     }
-    
+
     public List<Product> getProductVariantById(int id) {
         List<Product> products = new ArrayList<>();
         try {
@@ -777,7 +741,7 @@ public class ProductDao extends DBContext {
         }
         return products;
     }
-    
+
     public void updateProductVariantStock(int productVariantId, int quantity) {
         String sql = "UPDATE ProductVariant SET stock = stock - ? WHERE id = ?";
         try {
@@ -791,30 +755,29 @@ public class ProductDao extends DBContext {
     }
 
     public static void main(String[] args) {
-    // Create an instance of ProductDao
-    ProductDao productDao = new ProductDao();
+        // Create an instance of ProductDao
+        ProductDao productDao = new ProductDao();
 
-    // Define the category ID to search for
-    int categoryId = 1;
+        // Define the category ID to search for
+        int categoryId = 1;
 
-    // Call the searchByCategory method with the specified category ID
-    List<Product> products = productDao.searchByCategory(categoryId);
+        // Call the searchByCategory method with the specified category ID
+        List<Product> products = productDao.searchByCategory(categoryId);
 
-    // Print the products retrieved by the searchByCategory method
-    for (Product product : products) {
-        System.out.println("Product ID: " + product.getId());
-        System.out.println("Product Name: " + product.getName());
-        System.out.println("Product Image: " + product.getImage());
-        System.out.println("Product Price: " + product.getPrice());
-        System.out.println("Product Description: " + product.getDescription());
-        System.out.println("Product Stock: " + product.getStock());
-        System.out.println("Brand ID: " + product.getBrand().getId());
-        System.out.println("Brand Name: " + product.getBrand().getName());
-        System.out.println("Category ID: " + product.getCategory().getId());
-        System.out.println("Category Name: " + product.getCategory().getName());
-        System.out.println("----------");
+        // Print the products retrieved by the searchByCategory method
+        for (Product product : products) {
+            System.out.println("Product ID: " + product.getId());
+            System.out.println("Product Name: " + product.getName());
+            System.out.println("Product Image: " + product.getImage());
+            System.out.println("Product Price: " + product.getPrice());
+            System.out.println("Product Description: " + product.getDescription());
+            System.out.println("Product Stock: " + product.getStock());
+            System.out.println("Brand ID: " + product.getBrand().getId());
+            System.out.println("Brand Name: " + product.getBrand().getName());
+            System.out.println("Category ID: " + product.getCategory().getId());
+            System.out.println("Category Name: " + product.getCategory().getName());
+            System.out.println("----------");
+        }
     }
-}
-
 
 }

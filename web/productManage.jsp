@@ -121,7 +121,7 @@
                         </li>
 
                         <li>
-                            <a href="statistic">
+                            <a href="#">
                                 <img src="img/statistic.png" alt="Home" style="width: 35px; height: 35px; margin-left:5px;margin-right:10px;">
                                 Thống Kê
                             </a>
@@ -152,7 +152,7 @@
                                     <thead>
                                         <tr>
                                             <th>Hình ảnh</th>
-                                            <th>Tên sản phẩn</th>
+                                            <th>Tên sản phẩm</th>
                                             <th>Loại</th>
                                             <th>Nhãn hàng</th>
                                             <th>Giá</th>
@@ -181,30 +181,46 @@
                                                 <td>${product.ram}</td>
                                                 <td>${product.rom}</td>
                                                 <td>${product.gpu}</td>
-
                                                 <td>
                                                     <button class="btn btn-green btn-xs" onclick="addStock('${product.id}')">Thêm số lượng</button>
-                                                    <button class="btn btn-primary btn-xs" onclick="editProduct('${product.id}')">chỉnh sửa</button>
-                                                    <button class="btn btn-danger btn-xs" onclick="deleteProduct('${product.id}')">Xoá sản phẩm</button>
+                                                    <button class="btn btn-primary btn-xs" onclick="editProduct('${product.id}')">Chỉnh sửa</button>
+                                                    <c:choose>
+                                                        <c:when test="${product.isHidden == 0}">
+                                                            <button class="btn btn-danger btn-xs" onclick="toggleProduct('${product.id}', true)">Ẩn sản phẩm</button>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <button class="btn btn-success btn-xs" onclick="toggleProduct('${product.id}', false)">Hiện sản phẩm</button>
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </td>
-
-                                        <script>
-                                            function addStock(id) {
-                                                window.location.href = 'addquantityproduct?id=' + id;
-                                            }
-                                            function editProduct(id) {
-                                                window.location.href = 'updateproduct?id=' + id;
-                                            }
-
-                                            function deleteProduct(id) {
-                                                if (confirm('Are you sure you want to delete this product?')) {
-                                                    window.location.href = 'deleteproduct?id=' + id;
-                                                }
-                                            }
-                                        </script>
-                                        </tr>
-                                    </c:forEach>
+                                            </tr>
+                                        </c:forEach>
                                     </tbody>
+                                </table>
+
+                                <script>
+                                    function addStock(id) {
+                                        window.location.href = 'addquantityproduct?id=' + id;
+                                    }
+
+                                    function editProduct(id) {
+                                        window.location.href = 'updateproduct?id=' + id;
+                                    }
+
+                                    function toggleProduct(id, isHidden) {
+                                        if (isHidden) {
+                                            if (confirm('Bạn có chắc muốn ẩn sản phẩm này?')) {
+                                                window.location.href = 'hiddenproduct?id=' + id;
+                                            }
+                                        } else {
+                                            if (confirm('Bạn có chắc muốn hiện sản phẩm này?')) {
+                                                window.location.href = 'showproduct?id=' + id;
+                                            }
+                                        }
+                                    }
+                                </script>
+
+                                </tbody>
                                 </table>
                             </div>
                         </div>
@@ -245,9 +261,9 @@
         <script src="assets/js/dataTables/jquery.dataTables.js"></script>
         <script src="assets/js/dataTables/dataTables.bootstrap.js"></script>
         <script>
-                                            $(document).ready(function () {
-                                                $('#dataTables-example').dataTable();
-                                            });
+                                    $(document).ready(function () {
+                                        $('#dataTables-example').dataTable();
+                                    });
         </script>
         <!-- CUSTOM SCRIPTS -->
         <script src="assets/js/custom.js"></script>

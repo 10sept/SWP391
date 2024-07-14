@@ -4,9 +4,11 @@
  */
 package Controller;
 
-import Dal.OrderDao;
-import Model.Order;
+import Dal.FeedbackDao;
+import Dal.ProductDao;
+import Model.Product;
 import Model.User;
+import com.oracle.wls.shaded.org.apache.bcel.generic.INEG;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -14,13 +16,16 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 /**
  *
- * @author ADMIN
+ * @author admin
  */
-public class MyOrderSevlet extends HttpServlet {
+public class FeedBackServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +44,10 @@ public class MyOrderSevlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet MyOrderSevlet</title>");
+            out.println("<title>Servlet FeedBackServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet MyOrderSevlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet FeedBackServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,18 +66,19 @@ public class MyOrderSevlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        User u = (User) session.getAttribute("acc");
-        if (u != null) {
-            OrderDao orderDao = new OrderDao();
-            List<Order> orders = orderDao.getAllOrdersByUserId(u.getId());
-            List<Order> ordersStatus1 = orderDao.getAllOrdersByUserIdAndStatusId(u.getId(), 1);
-            request.setAttribute("ordersStatus1", ordersStatus1);
-            request.setAttribute("orders", orders);
-            request.getRequestDispatcher("orders.jsp").forward(request, response);
-        } else {
-            // Redirect to login page or handle unauthorized access
+        User acc = (User) session.getAttribute("acc");
+        if (acc == null) {
             response.sendRedirect("login.jsp");
+            return;
         }
+
+        int pid = Integer.parseInt(request.getParameter("pid"));
+        ProductDao pd = new ProductDao();
+        Product product = pd.getProductById(pid);
+
+        request.setAttribute("product", product);
+        request.getRequestDispatcher("feedback.jsp").forward(request, response);
+
     }
 
     /**
@@ -86,7 +92,23 @@ public class MyOrderSevlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        HttpSession session = request.getSession();
+        User acc = (User) session.getAttribute("acc");
+        if (acc == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+        int pid = Integer.parseInt(request.getParameter("id"));
+        LocalDateTime currentDate = LocalDateTime.now();
+        int rating = Integer.parseInt(request.getParameter("rating"));
+        String feedback = request.getParameter("feedback");
+
+        FeedbackDao fd = new FeedbackDao();
+        Date date = Date.from(currentDate.atZone(ZoneId.systemDefault()).toInstant());
+        java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+
+        fd.addFeedback(acc.getId(), pid, feedback, rating, sqlDate);
+        response.sendRedirect("home");
     }
 
     /**

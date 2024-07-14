@@ -4,7 +4,9 @@
  */
 package Controller;
 
+import Dal.FeedbackDao;
 import Dal.ProductDao;
+import Model.Feedback;
 import Model.Product;
 import Model.ProductVariant;
 import java.io.IOException;
@@ -59,26 +61,35 @@ public class ProductDetail extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String pid_raw = request.getParameter("pid");
-        try {
-            int pid = Integer.parseInt(pid_raw);
-            ProductDao pd = new ProductDao();
-            Product product = pd.getProductById(pid);
-            List<ProductVariant> productVariant = pd.getProductVariant(pid);
-            int stock = pd.sumStockByProductId(pid);
-//        int price_raw = product.getPrice();
-//        String formattedNumber = formatNumberWithDots(price_raw);
-//        List<ProductVariant> colorVariants = pd.getColorsByProductID(pid);
-//        request.setAttribute("variants", colorVariants);
-//        request.setAttribute("price", formattedNumber);
-            request.setAttribute("detail", product);
-            request.setAttribute("stock", stock);
-            request.setAttribute("productVariant", productVariant);
-            
-            request.getRequestDispatcher("productDetail.jsp").forward(request, response);
-        } catch (NumberFormatException e) {
-            System.out.println(e);
-        }
+        int pid = Integer.parseInt(request.getParameter("pid"));
+        ProductDao pd = new ProductDao();
+        Product product = pd.getProductById(pid);
+        List<ProductVariant> productVariant = pd.getProductVariant(pid);
+        int stock = pd.sumStockByProductId(pid);
+
+        FeedbackDao feedBack = new FeedbackDao();
+        List<Feedback> listFB = feedBack.getFeedbackByPid(pid);
+        String rate = feedBack.getAverageRatingByProductId(pid);
+
+        String rate1 = feedBack.getTotalStarCountByPid(pid, 1);
+        String rate2 = feedBack.getTotalStarCountByPid(pid, 2);
+        String rate3 = feedBack.getTotalStarCountByPid(pid, 3);
+        String rate4 = feedBack.getTotalStarCountByPid(pid, 4);
+        String rate5 = feedBack.getTotalStarCountByPid(pid, 5);
+
+        request.setAttribute("rate1", rate1);
+        request.setAttribute("rate2", rate2);
+        request.setAttribute("rate3", rate3);
+        request.setAttribute("rate4", rate4);
+        request.setAttribute("rate5", rate5);
+
+        request.setAttribute("rate", rate);
+        request.setAttribute("feedback", listFB);
+        request.setAttribute("detail", product);
+        request.setAttribute("stock", stock);
+        request.setAttribute("productVariant", productVariant);
+
+        request.getRequestDispatcher("productDetail.jsp").forward(request, response);
 
     }
 

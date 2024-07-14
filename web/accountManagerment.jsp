@@ -1,9 +1,3 @@
-<%-- 
-    Document   : AccountManagermet
-    Created on : Jun 6, 2024, 3:27:31 PM
-    Author     : ADMIN
---%>
-<!DOCTYPE html>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -53,64 +47,64 @@
         </nav>   
         <!-- /. NAV TOP  -->
         <nav class="navbar-default navbar-side" role="navigation">
-                <div class="sidebar-collapse">
-                    <ul class="nav" id="main-menu">
-                        <li class="text-center">
-                            <img src="img/logo1.png" class="user-image img-responsive" />
-                        </li>
-                        <li>
-                            <a href="homeAdmin1.jsp">
-                                <img src="img/home.png" alt="Home" style="width: 35px; height: 35px; margin-left:5px;margin-right:10px;">
-                                    Trang chủ
-                            </a>
-                        </li>
-                        <li>
-                            <a href="manageproduct">
-                                <img src="img/iconpm.png" alt="Home" style="width: 38px; height: 38px; margin-left:5px;margin-right:7px;">
-                                    Quản Lý Sản Phẩm
-                            </a>
-                        </li>
-                        <li>
-                            <a href="brandmanagerment">
-                                <img src="img/iconbrand.png" alt="Home" style="width: 40px; height: 40px; margin-left:5px;margin-right:5px;">
-                                    Quản Lý Nhãn Hàng
-                            </a>
-                        </li>
-                        <li>
-                            <a href="categorymanagerment">
-                                <img src="img/iconcategory.png" alt="Home" style="width: 40px; height: 40px; margin-left:5px;margin-right:5px;">
-                                    Quản Lý Loại Sản Phẩm
-                            </a>
-                        </li>
-                        <li>
-                            <a href="accountmanagerment">
-                                <img src="img/iconuser.png" alt="Home" style="width: 35px; height: 35px; margin-left:5px;margin-right:10px;">
-                                    Quản Lý Tài Khoản
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <img src="img/iconorder.png" alt="Home" style="width: 35px; height: 35px; margin-left:5px;margin-right:10px;">
-                                    Quản Lý Đơn Hàng
-                            </a>
-                        </li>
-	
-                        <li>
-                            <a href="#">
-                                <img src="img/statistic.png" alt="Home" style="width: 35px; height: 35px; margin-left:5px;margin-right:10px;">
-                                    Thống Kê
-                            </a>
-                        </li>
-                        <li>
-                            <a href="roleManagerment.jsp">
-                                <img src="img/role.png" alt="Home" style="width: 30px; height: 30px; margin-left:5px;margin-right:15px;">
-                                    Phân Quyền
-                            </a>
-                        </li>				
+            <div class="sidebar-collapse">
+                <ul class="nav" id="main-menu">
+                    <li class="text-center">
+                        <img src="img/logo1.png" class="user-image img-responsive" />
+                    </li>
+                    <li>
+                        <a href="homeAdmin1.jsp">
+                            <img src="img/home.png" alt="Home" style="width: 35px; height: 35px; margin-left:5px;margin-right:10px;">
+                                Trang chủ
+                        </a>
+                    </li>
+                    <li>
+                        <a href="manageproduct">
+                            <img src="img/iconpm.png" alt="Home" style="width: 38px; height: 38px; margin-left:5px;margin-right:7px;">
+                                Quản Lý Sản Phẩm
+                        </a>
+                    </li>
+                    <li>
+                        <a href="brandmanagerment">
+                            <img src="img/iconbrand.png" alt="Home" style="width: 40px; height: 40px; margin-left:5px;margin-right:5px;">
+                                Quản Lý Nhãn Hàng
+                        </a>
+                    </li>
+                    <li>
+                        <a href="categorymanagerment">
+                            <img src="img/iconcategory.png" alt="Home" style="width: 40px; height: 40px; margin-left:5px;margin-right:5px;">
+                                Quản Lý Loại Sản Phẩm
+                        </a>
+                    </li>
+                    <li>
+                        <a href="accountmanagerment">
+                            <img src="img/iconuser.png" alt="Home" style="width: 35px; height: 35px; margin-left:5px;margin-right:10px;">
+                                Quản Lý Tài Khoản
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img src="img/iconorder.png" alt="Home" style="width: 35px; height: 35px; margin-left:5px;margin-right:10px;">
+                                Quản Lý Đơn Hàng
+                        </a>
+                    </li>
 
-                    </ul>
-                </div>
-            </nav> 
+                    <li>
+                        <a href="statistic">
+                            <img src="img/statistic.png" alt="Home" style="width: 35px; height: 35px; margin-left:5px;margin-right:10px;">
+                                Thống Kê
+                        </a>
+                    </li>
+                    <li>
+                        <a href="roleManagerment.jsp">
+                            <img src="img/role.png" alt="Home" style="width: 30px; height: 30px; margin-left:5px;margin-right:15px;">
+                                Phân Quyền
+                        </a>
+                    </li>				
+
+                </ul>
+            </div>
+        </nav> 
         <!-- /. NAV SIDE  -->
         <div id="page-wrapper">
             <div id="page-inner">
@@ -118,6 +112,8 @@
                     <div class="col-md-12">
                         <h2>Quản Lý Tài Khoản</h2>   
                         <h5>Welcome ${sessionScope.acc.fullName}, Love to see you back.</h5>
+                        <a href="accountmanagerment?role=3"><button class="btn btn-danger">Quản lý tài khoản nhân viên</button></a>
+                        <a href="accountmanagerment?role=2"><button class="btn btn-primary">Quản lý tài khoản người dùng</button></a>
                     </div>
                 </div>
                 <!-- /. ROW  -->
@@ -137,33 +133,35 @@
                                                 <th>ID</th>
                                                 <th>Email</th>
                                                 <th>Họ Tên</th>
-                                                <th>Họ Tên</th>
                                                 <th>Giới Tính</th>
                                                 <th>Ngày Sinh</th>
+                                                <th>Số Điện Thoại</th>
                                                 <th>Địa chỉ</th>
                                                 <th>Chức Năng</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <c:forEach items="${requestScope.data}" var="u">
-                                                <tr>
-                                                    <td>${u.id}</td>
-                                                    <td>${u.email}</td>
-                                                    <td>${u.fullName}</td>
-                                                    <td>${u.gender}</td>
-                                                    <td>${u.dob}</td>
-                                                    <td>${u.phone}</td>
-                                                    <td>${u.address}</td>
-                                                    <td>
-                                                        <form action="updateaccount">
-                                                            <input type="hidden" name="id" value="${u.id}" />
-                                                            <button class="btn btn-primary btn-xs" type="submit">Edit</button>
-                                                        </form>
-                                                        <button class="btn btn-danger btn-xs">
-                                                            <a href="#" class="delete-link" onclick="doDelete('${u.id}')">Delete</a>
-                                                        </button>
-                                                    </td>
-                                                </tr>
+                                                <c:if test="${param.role == null || u.roleId == param.role}">
+                                                    <tr>
+                                                        <td>TK${u.id}</td>
+                                                        <td>${u.email}</td>
+                                                        <td>${u.fullName}</td>
+                                                        <td>${u.gender}</td>
+                                                        <td>${u.dob}</td>
+                                                        <td>${u.phone}</td>
+                                                        <td>${u.address}</td>
+                                                        <td>
+                                                            <form action="updateaccount">
+                                                                <input type="hidden" name="id" value="${u.id}" />
+                                                                <button class="btn btn-primary btn-xs" type="submit">Chỉnh sửa</button>
+                                                            </form>
+                                                            <button class="btn btn-danger btn-xs">
+                                                                <a href="#" class="delete-link" onclick="doDelete('${u.id}')">Xóa</a>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </c:if>
                                             </c:forEach>
 
                                         </tbody>
@@ -191,9 +189,9 @@
     <script src="assets/js/dataTables/jquery.dataTables.js"></script>
     <script src="assets/js/dataTables/dataTables.bootstrap.js"></script>
     <script>
-                $(document).ready(function () {
-                    $('#dataTables-example').dataTable();
-                });
+                                                                    $(document).ready(function () {
+                                                                        $('#dataTables-example').dataTable();
+                                                                    });
     </script>
     <!-- CUSTOM SCRIPTS -->
     <script src="assets/js/custom.js"></script>

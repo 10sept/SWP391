@@ -4,23 +4,21 @@
  */
 package Controller;
 
-import Dal.OrderDao;
-import Model.Order;
-import Model.User;
+import Dal.ProductDao;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import java.util.List;
 
 /**
  *
- * @author ADMIN
+ * @author admin
  */
-public class MyOrderSevlet extends HttpServlet {
+@WebServlet(name = "ShowProduct", urlPatterns = {"/showproduct"})
+public class ShowProduct extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +37,10 @@ public class MyOrderSevlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet MyOrderSevlet</title>");
+            out.println("<title>Servlet ShowProduct</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet MyOrderSevlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ShowProduct at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -60,19 +58,11 @@ public class MyOrderSevlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        User u = (User) session.getAttribute("acc");
-        if (u != null) {
-            OrderDao orderDao = new OrderDao();
-            List<Order> orders = orderDao.getAllOrdersByUserId(u.getId());
-            List<Order> ordersStatus1 = orderDao.getAllOrdersByUserIdAndStatusId(u.getId(), 1);
-            request.setAttribute("ordersStatus1", ordersStatus1);
-            request.setAttribute("orders", orders);
-            request.getRequestDispatcher("orders.jsp").forward(request, response);
-        } else {
-            // Redirect to login page or handle unauthorized access
-            response.sendRedirect("login.jsp");
-        }
+        String idstr = request.getParameter("id");
+        int id = Integer.parseInt(idstr);
+        ProductDao pdao = new ProductDao();
+        pdao.showProduct(id);
+        response.sendRedirect("manageproduct");
     }
 
     /**

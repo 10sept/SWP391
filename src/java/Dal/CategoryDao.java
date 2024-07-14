@@ -40,13 +40,13 @@ public class CategoryDao extends DBContext {
     public Category getCategoryById(int id) {
         Category category = null;
         try {
-            String sql = "Select * from Category WHERE cid = ?";
+            String sql = "Select * from Category WHERE id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 category = new Category();
-                category.setId(rs.getInt("cid"));
+                category.setId(rs.getInt("id"));
                 category.setName(rs.getString("name"));
             }
         } catch (Exception e) {
@@ -72,7 +72,7 @@ public class CategoryDao extends DBContext {
     public void UpdateCategory(int cid, String name) {
         String sql = "UPDATE [dbo].[Category]\n"
                 + "   SET [name] = ?\n"
-                + " WHERE cid = ?";
+                + " WHERE id = ?";
 
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -87,7 +87,7 @@ public class CategoryDao extends DBContext {
 
     public String deleteCategory(int cid) {
         String checkSql = "SELECT COUNT(*) FROM [dbo].[Product] WHERE cid = ?";
-        String deleteSql = "DELETE FROM [dbo].[Category] WHERE cid = ?";
+        String deleteSql = "DELETE FROM [dbo].[Category] WHERE id = ?";
         String message = "";
 
         try {
@@ -115,14 +115,14 @@ public class CategoryDao extends DBContext {
         }
         return message;
     }
+
     public List<Category> getCategoryCounts() throws Exception {
         List<Category> list = new ArrayList<>();
-        String sql = "SELECT c.id, c.name, COUNT(p.id) AS count " +
-                     "FROM Category c LEFT JOIN Product p ON c.id = p.cid " +
-                     "GROUP BY c.id, c.name";
+        String sql = "SELECT c.id, c.name, COUNT(p.id) AS count "
+                + "FROM Category c LEFT JOIN Product p ON c.id = p.cid "
+                + "GROUP BY c.id, c.name";
 
-        try (PreparedStatement st = connection.prepareStatement(sql);
-             ResultSet rs = st.executeQuery()) {
+        try (PreparedStatement st = connection.prepareStatement(sql); ResultSet rs = st.executeQuery()) {
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String name = rs.getString("name");

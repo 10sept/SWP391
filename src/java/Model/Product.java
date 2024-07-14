@@ -1,7 +1,9 @@
 package Model;
 
 public class Product {
+
     private int id;
+    private int isHidden;
     private String name;
     private String image;
     private int price;
@@ -20,6 +22,23 @@ public class Product {
 
     public Product(int id, String name, String image, int price, String description, int stock, String chip, String ram, String rom, String gpu, Category category, Brand brand, ProductVariant productVariant) {
         this.id = id;
+        this.name = name;
+        this.image = image;
+        this.price = price;
+        this.description = description;
+        this.stock = stock;
+        this.chip = chip;
+        this.ram = ram;
+        this.rom = rom;
+        this.gpu = gpu;
+        this.category = category;
+        this.brand = brand;
+        this.productVariant = productVariant;
+    }
+
+    public Product(int id, int isHidden, String name, String image, int price, String description, int stock, String chip, String ram, String rom, String gpu, Category category, Brand brand, ProductVariant productVariant) {
+        this.id = id;
+        this.isHidden = isHidden;
         this.name = name;
         this.image = image;
         this.price = price;
@@ -138,5 +157,12 @@ public class Product {
         this.productVariant = productVariant;
     }
 
-    
+    public int getIsHidden() {
+        return isHidden;
+    }
+
+    public void setIsHidden(int isHidden) {
+        this.isHidden = isHidden;
+    }
+
 }

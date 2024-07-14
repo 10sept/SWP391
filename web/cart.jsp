@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -205,7 +206,8 @@
                                     Color: ${c.colorName}
                                 </div>
                                 <div class="col">
-                                    ${c.price} 
+
+                                    <fmt:formatNumber value="${c.price}" type="currency"  maxFractionDigits="0" currencySymbol=""/>₫
                                 </div>
                                 <div class="col quantity-controls">
                                     <form action="updatequantity" method="post">
@@ -222,7 +224,9 @@
                                         <a href="#" class="quantity-link" onclick="this.closest('form').submit(); return false;">+</a>
                                     </form>
                                 </div>
-                                <div class="col">${c.totalOneProduct}
+                                <div class="col">
+
+                                    <fmt:formatNumber value="${c.totalOneProduct}" type="currency"  maxFractionDigits="0" currencySymbol=""/>₫
                                     <a class="close" href="#" onclick="doDelete(${c.id})">&#10005;</a>
                                 </div>
                             </div>
@@ -245,17 +249,22 @@
                     <hr>
                     <div class="row">
                         <div class="col" style="padding-left:0;">ITEMS ${listcart.size()}</div>
-                        <div class="col text-right">${total}</div>
+                        <div class="col text-right">
+                            <fmt:formatNumber value="${total}" type="currency"  maxFractionDigits="0" currencySymbol=""/>₫
+                        </div>
                     </div>
                     <form>
                         <p>SHIPPING</p>
-                        <select><option class="text-muted">Standard-Delivery- &euro;5.00</option></select>
+                        <select><option class="text-muted">Miễn phí vận chuyển</option></select>
                         <p>GIVE CODE</p>
                         <input id="code" placeholder="Enter your code">
                     </form>
                     <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 2vh 0;">
                         <div class="col">TOTAL PRICE</div>
-                        <div class="col text-right">${total}</div>
+                        <div class="col text-right">
+
+                            <fmt:formatNumber value="${total}" type="currency"  maxFractionDigits="0" currencySymbol=""/>₫
+                        </div>
                     </div>
                     <a href="checkout" class="btn">CHECKOUT</a>
                 </div>

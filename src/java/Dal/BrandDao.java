@@ -34,13 +34,13 @@ public class BrandDao extends DBContext {
     public Brand getBrandById(int id) {
         Brand brand = null;
         try {
-            String sql = "Select * from Brand WHERE bid = ?";
+            String sql = "Select * from Brand WHERE id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 brand = new Brand();
-                brand.setId(rs.getInt("bid"));
+                brand.setId(rs.getInt("id"));
                 brand.setName(rs.getString("name"));
             }
         } catch (SQLException e) {
@@ -63,15 +63,15 @@ public class BrandDao extends DBContext {
         }
     }
 
-    public void UpdateBrand(int bid, String name) {
+    public void UpdateBrand(int id, String name) {
         String sql = "UPDATE [dbo].[Brand]\n"
                 + "   SET [name] = ?\n"
-                + " WHERE bid = ?";
+                + " WHERE id = ?";
 
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, name);
-            st.setInt(2, bid);
+            st.setInt(2, id);
             st.executeUpdate();
 
         } catch (SQLException e) {
@@ -81,7 +81,7 @@ public class BrandDao extends DBContext {
 
     public String DeleteBrand(int bid) {
         String checkSql = "SELECT COUNT(*) FROM [dbo].[Product] WHERE bid = ?";
-        String deleteSql = "DELETE FROM [dbo].[Brand] WHERE bid = ?";
+        String deleteSql = "DELETE FROM [dbo].[Brand] WHERE id = ?";
         String message = "";
 
         try {
@@ -93,7 +93,7 @@ public class BrandDao extends DBContext {
             if (rs.next()) {
                 int productCount = rs.getInt(1);
                 if (productCount > 0) {
-                    message = "Không thể xóa thương hiệu này. Có các sản phẩm  "+ productCount +" được liên kết với thương hiệu này. Vui lòng xóa hoặc chỉ định lại các sản phẩm này trước khi xóa nhãn hiệu.";
+                    message = "Không thể xóa thương hiệu này. Có các sản phẩm  " + productCount + " được liên kết với thương hiệu này. Vui lòng xóa hoặc chỉ định lại các sản phẩm này trước khi xóa nhãn hiệu.";
                     return message;
                 }
             }
@@ -109,11 +109,12 @@ public class BrandDao extends DBContext {
         }
         return message;
     }
+
     public List<Brand> getBrandCounts() throws Exception {
         List<Brand> list = new ArrayList<>();
         String sql = "SELECT b.id, b.name, COUNT(p.id) AS count \n"
                 + "                 FROM Brand b \n"
-                + "                 LEFT JOIN Product p ON b.id = p.bid\n"
+                + "                 LEFT JOIN Product p ON b.id = p.id\n"
                 + "                 GROUP BY b.id, b.name";
 
         try (PreparedStatement st = connection.prepareStatement(sql); ResultSet rs = st.executeQuery()) {
@@ -133,10 +134,7 @@ public class BrandDao extends DBContext {
 
     public static void main(String[] args) {
         BrandDao bd = new BrandDao();
-        List<Brand> bd1 = bd.getAllBrand();
-        for (Brand brand : bd1) {
-            System.out.println(brand);
-        }
+        bd.DeleteBrand(11);
 
     }
 }
