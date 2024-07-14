@@ -118,80 +118,80 @@
                     <div class="col-md-9">
                         <h2>Phân Quyền</h2>
                         <h5>Welcome ${sessionScope.acc.fullName}, Love to see you back.</h5>
-                        
+
                         <a href="banuser"><button class="btn btn-danger ">Cấm Tài Khoản Người Dùng</button></a>
-                        <a href="updaterole"><button class="btn btn-primary">Phân Quyền Nhân Viên</button></a>
+                        <a href="updaterole"><button class="btn btn-primary">Phân Quyền</button></a>
                     </div>
                 </div>
 
 
                 <!-- /. ROW  -->
                 <hr />
-<!--                <div class="row">
-                    <div class="col-md-12">
-                         Advanced Tables 
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                Advanced Tables
-                            </div>
-                            <div class="panel-body">
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-bordered table-hover" id="dataTables-example">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Họ và Tên</th>
-                                                <th>Email</th>
-                                                <th>Chức Vụ</th>
-                                                <th>Chức Năng</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <c:forEach items="${requestScope.listCategory}" var="lc">
-                                                <tr>
-                                                    <td>${lc.id}</td>
-                                                    <td>${lc.name}</td>
-                                                    <td>
-                                                        <form action="updatecategory">
-                                                            <input type="hidden" name="id" value="${lc.id}" />
-                                                            <button class="btn btn-primary btn-xs" type="submit">Edit</button>
-                                                        </form>
-                                                        <button class="btn btn-danger btn-xs">
-                                                            <a href="#" class="delete-link" onclick="doDelete('${lc.id}')">Delete</a>
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            </c:forEach>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        End Advanced Tables 
-                    </div>
-                </div>
-            </div>-->
-            <!-- /. PAGE INNER  -->
-        </div>
-        <!-- /. PAGE WRAPPER  -->
+                <!--                <div class="row">
+                                    <div class="col-md-12">
+                                         Advanced Tables 
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                Advanced Tables
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="table-responsive">
+                                                    <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>ID</th>
+                                                                <th>Họ và Tên</th>
+                                                                <th>Email</th>
+                                                                <th>Chức Vụ</th>
+                                                                <th>Chức Năng</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                <c:forEach items="${requestScope.listCategory}" var="lc">
+                    <tr>
+                        <td>${lc.id}</td>
+                        <td>${lc.name}</td>
+                        <td>
+                            <form action="updatecategory">
+                                <input type="hidden" name="id" value="${lc.id}" />
+                                <button class="btn btn-primary btn-xs" type="submit">Edit</button>
+                            </form>
+                            <button class="btn btn-danger btn-xs">
+                                <a href="#" class="delete-link" onclick="doDelete('${lc.id}')">Delete</a>
+                            </button>
+                        </td>
+                    </tr>
+                </c:forEach>
+            </tbody>
+        </table>
     </div>
-    <!-- /. WRAPPER  -->
-    <!-- SCRIPTS AT THE BOTTOM TO REDUCE THE LOAD TIME -->
-    <!-- JQUERY SCRIPTS -->
-    <script src="assets/js/jquery-1.10.2.js"></script>
-    <!-- BOOTSTRAP SCRIPTS -->
-    <script src="assets/js/bootstrap.min.js"></script>
-    <!-- METISMENU SCRIPTS -->
-    <script src="assets/js/jquery.metisMenu.js"></script>
-    <!-- DATA TABLE SCRIPTS -->
-    <script src="assets/js/dataTables/jquery.dataTables.js"></script>
-    <script src="assets/js/dataTables/dataTables.bootstrap.js"></script>
-    <script>
-                                                                $(document).ready(function () {
-                                                                    $('#dataTables-example').dataTable();
-                                                                });
-    </script>
-    <!-- CUSTOM SCRIPTS -->
-    <script src="assets/js/custom.js"></script>
-</body>
+</div>
+</div>
+End Advanced Tables 
+</div>
+</div>
+</div>-->
+                <!-- /. PAGE INNER  -->
+            </div>
+            <!-- /. PAGE WRAPPER  -->
+        </div>
+        <!-- /. WRAPPER  -->
+        <!-- SCRIPTS AT THE BOTTOM TO REDUCE THE LOAD TIME -->
+        <!-- JQUERY SCRIPTS -->
+        <script src="assets/js/jquery-1.10.2.js"></script>
+        <!-- BOOTSTRAP SCRIPTS -->
+        <script src="assets/js/bootstrap.min.js"></script>
+        <!-- METISMENU SCRIPTS -->
+        <script src="assets/js/jquery.metisMenu.js"></script>
+        <!-- DATA TABLE SCRIPTS -->
+        <script src="assets/js/dataTables/jquery.dataTables.js"></script>
+        <script src="assets/js/dataTables/dataTables.bootstrap.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('#dataTables-example').dataTable();
+            });
+        </script>
+        <!-- CUSTOM SCRIPTS -->
+        <script src="assets/js/custom.js"></script>
+        </body>
 </html>

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+F<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -36,42 +38,44 @@
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
 
-    </head>    <style>
-        /* Dropdown container */
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
 
-        /* Dropdown content (hidden by default) */
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #000;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-        }
+        <style>
+            /* Dropdown container */
+            .dropdown {
+                position: relative;
+                display: inline-block;
+            }
 
-        /* Links inside the dropdown */
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
+            /* Dropdown content (hidden by default) */
+            .dropdown-content {
+                display: none;
+                position: absolute;
+                background-color: #000;
+                min-width: 160px;
+                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                z-index: 1;
+            }
 
-        /* Change color of dropdown links on hover */
-        .dropdown-content a:hover {
-            background-color: #999
-        }
+            /* Links inside the dropdown */
+            .dropdown-content a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+            }
 
-        /* Show the dropdown menu on hover */
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
+            /* Change color of dropdown links on hover */
+            .dropdown-content a:hover {
+                background-color: #999
+            }
 
-    </style>
+            /* Show the dropdown menu on hover */
+            .dropdown:hover .dropdown-content {
+                display: block;
+            }
+
+        </style>
+    </head>
     <body>
         <!-- HEADER -->
         <header>
@@ -227,17 +231,19 @@
                     <div class="product-details">
                         <h2 class="product-name">${detail.name}</h2>
                         <div>
+
                             <div class="product-rating">
+                                <strong>${requestScope.rate}</strong>
+
                                 <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star-o"></i>
                             </div>
-                            <a class="review-link" href="#">10 Review(s) | Add your review</a>
+                            <!--                            <a class="review-link" href="#">10 Review(s)</a>-->
                         </div>
                         <div>
-                            <h3 class="product-price">${detail.price} đ</h3>
+                            <h3 class="product-price">
+
+                                <fmt:formatNumber value="${detail.price}" type="currency"  maxFractionDigits="0" currencySymbol=""/>₫
+                            </h3>
                             <span class="product-available">${stock} In Stock</span>
                         </div>
                         <div class="product-options">
@@ -253,7 +259,7 @@
                             <label>
                                 Số lượng
                                 <div class="input-number">
-                                    <input type="number" value="1" min="1" id="quantity">
+                                    <input type="number" value="1" min="1" id="quantity" oninput="validity.valid||(value='');">
                                     <span class="qty-up">+</span>
                                     <span class="qty-down">-</span>
                                 </div>
@@ -289,8 +295,8 @@
                         </div>
                         <ul class="product-links">
                             <li>Category:</li>
-                            <li><a href="#">Headphones</a></li>
-                            <li><a href="#">Accessories</a></li>
+                            <li><a href="#">${detail.category.name}</a></li>
+
                         </ul>
                         <ul class="product-links">
                             <li>Share:</li>
@@ -309,7 +315,7 @@
                         <!-- product tab nav -->
                         <ul class="tab-nav">
                             <li class="active"><a data-toggle="tab" href="#tab1">Description</a></li>
-                            <li><a data-toggle="tab" href="#tab3">Reviews (3)</a></li>
+                            <li><a data-toggle="tab" href="#tab3">Reviews</a></li>
                         </ul>
                         <!-- /product tab nav -->
 
@@ -331,16 +337,13 @@
                             <div id="tab3" class="tab-pane fade in">
                                 <div class="row">
                                     <!-- Rating -->
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         <div id="rating">
                                             <div class="rating-avg">
-                                                <span>4.5</span>
+                                                <span>${requestScope.rate}</span>
                                                 <div class="rating-stars">
                                                     <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star-o"></i>
+
                                                 </div>
                                             </div>
                                             <ul class="rating">
@@ -355,7 +358,7 @@
                                                     <div class="rating-progress">
                                                         <div style="width: 80%;"></div>
                                                     </div>
-                                                    <span class="sum">3</span>
+                                                    <span class="sum">${requestScope.rate5}</span>
                                                 </li>
                                                 <li>
                                                     <div class="rating-stars">
@@ -368,7 +371,7 @@
                                                     <div class="rating-progress">
                                                         <div style="width: 60%;"></div>
                                                     </div>
-                                                    <span class="sum">2</span>
+                                                    <span class="sum">${requestScope.rate4}</span>
                                                 </li>
                                                 <li>
                                                     <div class="rating-stars">
@@ -381,7 +384,7 @@
                                                     <div class="rating-progress">
                                                         <div></div>
                                                     </div>
-                                                    <span class="sum">0</span>
+                                                    <span class="sum">${requestScope.rate3}</span>
                                                 </li>
                                                 <li>
                                                     <div class="rating-stars">
@@ -394,7 +397,7 @@
                                                     <div class="rating-progress">
                                                         <div></div>
                                                     </div>
-                                                    <span class="sum">0</span>
+                                                    <span class="sum">${requestScope.rate2}</span>
                                                 </li>
                                                 <li>
                                                     <div class="rating-stars">
@@ -407,7 +410,7 @@
                                                     <div class="rating-progress">
                                                         <div></div>
                                                     </div>
-                                                    <span class="sum">0</span>
+                                                    <span class="sum">${requestScope.rate1}</span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -415,57 +418,25 @@
                                     <!-- /Rating -->
 
                                     <!-- Reviews -->
-                                    <div class="col-md-6">
+                                    <div class="col-md-7">
                                         <div id="reviews">
                                             <ul class="reviews">
-                                                <li>
-                                                    <div class="review-heading">
-                                                        <h5 class="name">John</h5>
-                                                        <p class="date">27 DEC 2018, 8:0 PM</p>
-                                                        <div class="review-rating">
-                                                            <i class="fa fa-star"></i>
-                                                            <i class="fa fa-star"></i>
-                                                            <i class="fa fa-star"></i>
-                                                            <i class="fa fa-star"></i>
-                                                            <i class="fa fa-star-o empty"></i>
+                                                <c:forEach var="feedback" items="${feedback}">
+                                                    <li>
+                                                        <div class="review-heading">
+                                                            <h5 class="name">${feedback.userName}</h5>
+                                                            <p class="date">${feedback.createdAt}</p>
+                                                            <div class="review-rating">
+                                                                <c:forEach var="i" begin="1" end="5">
+                                                                    <i class="fa fa-star${i <= feedback.rate ? '' : '-o empty'}"></i>
+                                                                </c:forEach>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="review-body">
-                                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="review-heading">
-                                                        <h5 class="name">John</h5>
-                                                        <p class="date">27 DEC 2018, 8:0 PM</p>
-                                                        <div class="review-rating">
-                                                            <i class="fa fa-star"></i>
-                                                            <i class="fa fa-star"></i>
-                                                            <i class="fa fa-star"></i>
-                                                            <i class="fa fa-star"></i>
-                                                            <i class="fa fa-star-o empty"></i>
+                                                        <div class="review-body">
+                                                            <p>${feedback.comment}</p>
                                                         </div>
-                                                    </div>
-                                                    <div class="review-body">
-                                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="review-heading">
-                                                        <h5 class="name">John</h5>
-                                                        <p class="date">27 DEC 2018, 8:0 PM</p>
-                                                        <div class="review-rating">
-                                                            <i class="fa fa-star"></i>
-                                                            <i class="fa fa-star"></i>
-                                                            <i class="fa fa-star"></i>
-                                                            <i class="fa fa-star"></i>
-                                                            <i class="fa fa-star-o empty"></i>
-                                                        </div>
-                                                    </div>
-                                                    <div class="review-body">
-                                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
-                                                    </div>
-                                                </li>
+                                                    </li>
+                                                </c:forEach>
                                             </ul>
                                             <ul class="reviews-pagination">
                                                 <li class="active">1</li>
@@ -477,29 +448,6 @@
                                         </div>
                                     </div>
                                     <!-- /Reviews -->
-
-                                    <!-- Review Form -->
-                                    <div class="col-md-3">
-                                        <div id="review-form">
-                                            <form class="review-form">
-                                                <input class="input" type="text" placeholder="Your Name">
-                                                <input class="input" type="email" placeholder="Your Email">
-                                                <textarea class="input" placeholder="Your Review"></textarea>
-                                                <div class="input-rating">
-                                                    <span>Your Rating: </span>
-                                                    <div class="stars">
-                                                        <input id="star5" name="rating" value="5" type="radio"><label for="star5"></label>
-                                                        <input id="star4" name="rating" value="4" type="radio"><label for="star4"></label>
-                                                        <input id="star3" name="rating" value="3" type="radio"><label for="star3"></label>
-                                                        <input id="star2" name="rating" value="2" type="radio"><label for="star2"></label>
-                                                        <input id="star1" name="rating" value="1" type="radio"><label for="star1"></label>
-                                                    </div>
-                                                </div>
-                                                <button class="primary-btn">Submit</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <!-- /Review Form -->
                                 </div>
                             </div>
                             <!-- /tab3  -->
@@ -755,33 +703,6 @@
             <!-- /container -->
         </div>
         <!-- /top footer -->
-
-        <!-- bottom footer -->
-        <div id="bottom-footer" class="section">
-            <div class="container">
-                <!-- row -->
-                <div class="row">
-                    <div class="col-md-12 text-center">
-                        <ul class="footer-payments">
-                            <li><a href="#"><i class="fa fa-cc-visa"></i></a></li>
-                            <li><a href="#"><i class="fa fa-credit-card"></i></a></li>
-                            <li><a href="#"><i class="fa fa-cc-paypal"></i></a></li>
-                            <li><a href="#"><i class="fa fa-cc-mastercard"></i></a></li>
-                            <li><a href="#"><i class="fa fa-cc-discover"></i></a></li>
-                            <li><a href="#"><i class="fa fa-cc-amex"></i></a></li>
-                        </ul>
-                        <span class="copyright">
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                            Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                        </span>
-                    </div>
-                </div>
-                <!-- /row -->
-            </div>
-            <!-- /container -->
-        </div>
-        <!-- /bottom footer -->
     </footer>
     <!-- /FOOTER -->
 
@@ -792,81 +713,46 @@
     <script src="js/nouislider.min.js"></script>
     <script src="js/jquery.zoom.min.js"></script>
     <script src="js/main.js"></script>
-<!--    <script>
-                                document.addEventListener('DOMContentLoaded', function () {
-                                    const addToCartBtn = document.querySelector('.add-to-cart-btn');
-                                    const colorSelect = document.getElementById('colorSelect');
-                                    const quantityInput = document.getElementById('quantity');
-
-                                    addToCartBtn.addEventListener('click', function () {
-                                        const selectedOption = colorSelect.options[colorSelect.selectedIndex];
-                                        const productId = selectedOption.getAttribute('data-pid');
-                                        const variantId = selectedOption.getAttribute('data-vpid');
-                                        const quantity = quantityInput.value;
-
-                                        addToCart(productId, variantId, quantity);
-                                    });
-
-                                    function addToCart(productId, variantId, quantity) {
-                                        $.ajax({
-                                            url: 'cart', // Thay thế bằng URL thực của servlet của bạn
-                                            type: 'POST',
-                                            data: {
-                                                pid: productId,
-                                                vpid: variantId,
-                                                quantity: quantity
-                                            },
-                                            success: function (response) {
-                                                // Cập nhật UI của giỏ hàng hoặc hiển thị thông báo nếu cần thiết
-                                                alert('Product added to cart successfully!');
-                                            },
-                                            error: function (error) {
-                                                console.error('Error adding product to cart:', error);
-                                            }
-                                        });
-                                    }
-                                });
-    </script>-->
 
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const addToCartBtn = document.querySelector('.add-to-cart-btn');
-        const colorSelect = document.getElementById('colorSelect');
-        const quantityInput = document.getElementById('quantity');
+        document.addEventListener('DOMContentLoaded', function () {
+            const addToCartBtn = document.querySelector('.add-to-cart-btn');
+            const colorSelect = document.getElementById('colorSelect');
+            const quantityInput = document.getElementById('quantity');
 
-        addToCartBtn.addEventListener('click', function () {
-            // Get selected option details
-            const selectedOption = colorSelect.options[colorSelect.selectedIndex];
-            const productId = selectedOption.getAttribute('data-pid');
-            const variantId = selectedOption.getAttribute('data-vpid');
-            const quantity = quantityInput.value;
+            addToCartBtn.addEventListener('click', function () {
+                // Get selected option details
+                const selectedOption = colorSelect.options[colorSelect.selectedIndex];
+                const productId = selectedOption.getAttribute('data-pid');
+                const variantId = selectedOption.getAttribute('data-vpid');
+                const quantity = quantityInput.value;
 
-            // Send AJAX request to add to cart
-            $.ajax({
-                url: 'cart', // URL of the servlet
-                type: 'POST',
-                data: {
-                    pid: productId,
-                    vpid: variantId,
-                    quantity: quantity
-                },
-                dataType: 'json', // Expect JSON response
-                success: function (response) {
-                    if (response.loggedIn) {
-                        // User is logged in, display success message
-                        alert(response.message);
-                    } else {
-                        // User is not logged in, redirect to login page
-                        window.location.href = 'login.jsp'; // URL of the login page
+                // Send AJAX request to add to cart
+                $.ajax({
+                    url: 'cart', // URL of the servlet
+                    type: 'POST',
+                    data: {
+                        pid: productId,
+                        vpid: variantId,
+                        quantity: quantity
+                    },
+                    dataType: 'json', // Expect JSON response
+                    success: function (response) {
+                        if (response.loggedIn) {
+                            // User is logged in, display success message
+                            alert(response.message);
+                        } else {
+                            // User is not logged in, redirect to login page
+                            window.location.href = 'login.jsp'; // URL of the login page
+                        }
+                    },
+                    error: function (error) {
+                        console.error('Error checking login status:', error);
                     }
-                },
-                error: function (error) {
-                    console.error('Error checking login status:', error);
-                }
+                });
             });
         });
-    });
-</script>
+    </script>
 
 
 </body>
