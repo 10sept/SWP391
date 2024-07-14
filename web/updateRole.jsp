@@ -30,15 +30,9 @@
     </head>
     <body>
         <script type="text/javascript">
-            function confirmStaff(userId) {
-                if (confirm("Bạn có chắc chắn muốn đổi chức vụ tài khoản này?")) {
-                    document.getElementById("changeStaff_" + userId).submit();
-                }
-            }
-
-            function confirmAdmin(userId) {
-                if (confirm("Bạn có chắc chắn muốn đổi chức vụ tài khoản này?")) {
-                    document.getElementById("changeAdmin_" + userId).submit();
+            function confirmRoleChange(userId) {
+                if (confirm("Bạn có chắc chắn muốn đổi chức vụ của tài khoản này?")) {
+                    document.getElementById("changeRole_" + userId).submit();
                 }
             }
         </script>
@@ -51,12 +45,9 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="homeadmin.jsp"></a> 
+                    <a class="navbar-brand" href="homeadmin.jsp">Trang Quản Lý</a> 
                 </div>
-                <div style="color: white;
-                     padding: 15px 50px 5px 50px;
-                     float: right;
-                     font-size: 16px;"> Last access : 30 May 2014 &nbsp; <a href="logout" class="btn btn-danger square-btn-adjust">Logout</a> </div>
+                <div style="color: white; padding: 15px 50px 5px 50px; float: right; font-size: 16px;"> Last access : 30 May 2014 &nbsp; <a href="logout" class="btn btn-danger square-btn-adjust">Logout</a> </div>
             </nav>   
             <!-- /. NAV TOP  -->
             <nav class="navbar-default navbar-side" role="navigation">
@@ -125,7 +116,7 @@
                             <h5>Welcome ${sessionScope.acc.fullName}, Love to see you back.</h5>
 
                             <a href="banuser"><button class="btn btn-danger ">Cấm Tài Khoản Người Dùng</button></a>
-                            <a href="updaterole"><button class="btn btn-primary">Phân Quyền Nhân Viên</button></a>
+                            <a href="updaterole"><button class="btn btn-primary">Phân Quyền</button></a>
                         </div>
                     </div>
 
@@ -151,39 +142,30 @@
                                             </thead>
                                             <tbody>
                                                 <c:forEach items="${requestScope.listUser}" var="lu">
-                                                    <c:choose>
-                                                        <c:when test="${lu.roleId == 1}">
-                                                            <tr>
-                                                                <td>${lu.id}</td>
-                                                                <td>${lu.fullName}</td>
-                                                                <td>${lu.email}</td>
-                                                                <td>Quản trị viên</td>
-                                                                <td>
-                                                                    <form id="changeStaff_${lu.id}" action="updaterole" method="post">
-                                                                        <input type="hidden" name="changeRoleStaff" value="${lu.id}">
-                                                                            <button type="button" class="btn btn-primary btn-xs" onclick="confirmStaff('${lu.id}')">Chuyển qua nhân viên</button>
-                                                                    </form>
-                                                                </td>
-                                                            </tr>
-                                                        </c:when>
-                                                        <c:when test="${lu.roleId == 3}">
-                                                            <tr>
-                                                                <td>${lu.id}</td>
-                                                                <td>${lu.fullName}</td>
-                                                                <td>${lu.email}</td>
-                                                                <td>Nhân viên</td>
-                                                                <td>
-                                                                    <form id="changeAdmin_${lu.id}" action="updaterole" method="post">
-                                                                        <input type="hidden" name="changeRoleAdmin" value="${lu.id}">
-                                                                            <button type="button" class="btn btn-success btn-xs" onclick="confirmAdmin('${lu.id}')">Chuyển qua quản trị viên</button>
-                                                                    </form>
-                                                                </td>
-                                                            </tr>
-                                                        </c:when>
-                                                    </c:choose>
+                                                    <tr>
+                                                        <td>${lu.id}</td>
+                                                        <td>${lu.fullName}</td>
+                                                        <td>${lu.email}</td>
+                                                        <td>
+                                                            <c:choose>
+                                                                <c:when test="${lu.roleId == 1}">Quản trị viên</c:when>
+                                                                <c:when test="${lu.roleId == 2}">Người dùng</c:when>
+                                                                <c:when test="${lu.roleId == 3}">Nhân viên</c:when>
+                                                            </c:choose>
+                                                        </td>
+                                                        <td>
+                                                            <form action="updaterole" method="post" id="changeRole_${lu.id}">
+                                                                <input type="hidden" name="userId" value="${lu.id}" />
+                                                                <select name="roleId" class="form-control">
+                                                                    <option value="2" ${lu.roleId == 2 ? 'selected' : ''}>Người dùng</option>
+                                                                    <option value="3" ${lu.roleId == 3 ? 'selected' : ''}>Nhân viên</option>
+                                                                    <option value="1" ${lu.roleId == 1 ? 'selected' : ''}>Quản trị viên</option>
+                                                                </select>
+                                                                <button type="button" class="btn btn-primary" onclick="confirmRoleChange(${lu.id})">Cập nhật</button>
+                                                            </form>
+                                                        </td>
+                                                    </tr>
                                                 </c:forEach>
-
-
                                             </tbody>
                                         </table>
                                     </div>
@@ -209,9 +191,9 @@
         <script src="assets/js/dataTables/jquery.dataTables.js"></script>
         <script src="assets/js/dataTables/dataTables.bootstrap.js"></script>
         <script>
-                                                                                $(document).ready(function () {
-                                                                                    $('#dataTables-example').dataTable();
-                                                                                });
+                                                                    $(document).ready(function () {
+                                                                        $('#dataTables-example').dataTable();
+                                                                    });
         </script>
         <!-- CUSTOM SCRIPTS -->
         <script src="assets/js/custom.js"></script>

@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -22,16 +23,18 @@ public class OrderDao extends DBContext {
         String sql = "SELECT "
                 + "   O.id AS orderId, "
                 + "   O.orderDate, "
-                + "   O.total AS total, "
+                + "   O.total AS total,"
+                + "   O.name AS name, "
+                + "   S.id AS statusId, "
                 + "   S.name AS status, "
+                + "   P.id AS productId, "
                 + "   P.name AS productName, "
                 + "   P.image AS productImage, "
                 + "   OD.price, "
                 + "   OD.quantity, "
                 + "   OD.total AS detailTotal, "
                 + "   B.name AS brandName, "
-                + "   C.name AS categoryName, "
-                + "   U.fullName "
+                + "   C.name AS categoryName "
                 + "FROM "
                 + "   Orders O "
                 + "JOIN "
@@ -63,14 +66,15 @@ public class OrderDao extends DBContext {
                         order.setId(orderId);
                         order.setDate(rs.getDate("orderDate"));
                         order.setTotal(rs.getInt("total"));
-
+                        order.setName(rs.getString("name"));
                         Status statusObj = new Status();
                         statusObj.setStatus(rs.getString("status"));
+                        statusObj.setId(rs.getInt("statusId"));
                         order.setStatusid(statusObj);
 
                         User user = new User();
                         user.setId(userId);
-                        user.setFullName(rs.getString("fullName"));
+
                         order.setUserId(user);
 
                         orderMap.put(orderId, order);
@@ -83,6 +87,101 @@ public class OrderDao extends DBContext {
                     category.setName(rs.getString("categoryName"));
 
                     Product product = new Product();
+                    product.setId(rs.getInt("productId"));
+                    product.setName(rs.getString("productName"));
+                    product.setImage(rs.getString("productImage"));
+                    product.setPrice(rs.getInt("price"));
+                    product.setBrand(brand);
+                    product.setCategory(category);
+
+                    OrderDetail orderDetail = new OrderDetail();
+                    orderDetail.setPrice(rs.getInt("price"));
+                    orderDetail.setQuantity(rs.getInt("quantity"));
+                    orderDetail.setTotal(rs.getInt("detailTotal"));
+                    orderDetail.setPid(product);
+
+                    order.addOrderDetail(orderDetail);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>(orderMap.values());
+    }
+
+    public List<Order> getAllOrdersByUserIdAndStatusId(int userId, int statusId) {
+        Map<Integer, Order> orderMap = new LinkedHashMap<>(); // Using LinkedHashMap to maintain insertion order
+
+        String sql = "SELECT "
+                + "   O.id AS orderId, "
+                + "   O.orderDate, "
+                + "   O.total AS total, "
+                + "   O.name AS name, "
+                + "   S.id AS statusId, "
+                + "   S.name AS status, "
+                + "   P.id AS productId, "
+                + "   P.name AS productName, "
+                + "   P.image AS productImage, "
+                + "   OD.price, "
+                + "   OD.quantity, "
+                + "   OD.total AS detailTotal, "
+                + "   B.name AS brandName, "
+                + "   C.name AS categoryName "
+                + "FROM "
+                + "   Orders O "
+                + "JOIN "
+                + "   Status S ON O.statusId = S.id "
+                + "JOIN "
+                + "   OrderDetail OD ON OD.oid = O.id "
+                + "JOIN "
+                + "   Product P ON OD.pid = P.id "
+                + "JOIN "
+                + "   Brand B ON P.bid = B.id "
+                + "JOIN "
+                + "   Category C ON P.cid = C.id "
+                + "JOIN "
+                + "   Users U ON O.userId = U.id "
+                + "WHERE "
+                + "   O.userId = ? AND O.statusId = ? "
+                + "ORDER BY "
+                + "   O.id DESC"; // Ordering by orderId in descending order
+
+        try (PreparedStatement st = connection.prepareStatement(sql)) {
+            st.setInt(1, userId);
+            st.setInt(2, statusId);
+            try (ResultSet rs = st.executeQuery()) {
+                while (rs.next()) {
+                    int orderId = rs.getInt("orderId");
+                    Order order = orderMap.get(orderId);
+
+                    if (order == null) {
+                        order = new Order();
+                        order.setId(orderId);
+                        order.setDate(rs.getDate("orderDate"));
+                        order.setTotal(rs.getInt("total"));
+                        order.setName(rs.getString("name"));
+                        Status statusObj = new Status();
+                        statusObj.setStatus(rs.getString("status"));
+                        statusObj.setId(rs.getInt("statusId"));
+                        order.setStatusid(statusObj);
+
+                        User user = new User();
+                        user.setId(userId);
+
+                        order.setUserId(user);
+
+                        orderMap.put(orderId, order);
+                    }
+
+                    Brand brand = new Brand();
+                    brand.setName(rs.getString("brandName"));
+
+                    Category category = new Category();
+                    category.setName(rs.getString("categoryName"));
+
+                    Product product = new Product();
+                    product.setId(rs.getInt("productId"));
                     product.setName(rs.getString("productName"));
                     product.setImage(rs.getString("productImage"));
                     product.setPrice(rs.getInt("price"));
@@ -211,9 +310,12 @@ public class OrderDao extends DBContext {
         Order order = null;
         String sql = "SELECT "
                 + "   O.id AS orderId, "
+                + "   O.name AS orderName, " // Lấy trường name từ bảng Orders
                 + "   O.orderDate, "
                 + "   O.total AS total, "
+                + "   S.id AS statusId, "
                 + "   S.name AS status, "
+                + "   P.id AS productId, "
                 + "   P.name AS productName, "
                 + "   P.image AS productImage, "
                 + "   OD.price, "
@@ -238,7 +340,7 @@ public class OrderDao extends DBContext {
                 + "   Brand B ON P.bid = B.id "
                 + "JOIN "
                 + "   Category C ON P.cid = C.id "
-                + "JOIN "
+                + "LEFT JOIN " // Sử dụng LEFT JOIN để tránh mất dữ liệu nếu không có sản phẩm nào trong đơn hàng
                 + "   Users U ON O.userId = U.id "
                 + "WHERE "
                 + "   O.id = ?";
@@ -250,17 +352,16 @@ public class OrderDao extends DBContext {
                     if (order == null) {
                         order = new Order();
                         order.setId(orderId);
+                        order.setName(rs.getString("orderName")); // Lấy name từ bảng Orders
                         order.setDate(rs.getDate("orderDate"));
                         order.setTotal(rs.getDouble("total"));
 
                         Status statusObj = new Status();
+                        statusObj.setId(rs.getInt("statusId"));
                         statusObj.setStatus(rs.getString("status"));
                         order.setStatusid(statusObj);
 
-                        User user = new User();
-                        user.setFullName(rs.getString("fullName"));
-                        order.setUserId(user);
-
+                        // Không cần lấy fullName từ bảng Users nữa
                         order.setProvince(rs.getString("province"));
                         order.setDistrict(rs.getString("district"));
                         order.setCommune(rs.getString("commune"));
@@ -275,6 +376,7 @@ public class OrderDao extends DBContext {
                     category.setName(rs.getString("categoryName"));
 
                     Product product = new Product();
+                    product.setId(rs.getInt("productId"));
                     product.setName(rs.getString("productName"));
                     product.setImage(rs.getString("productImage"));
                     product.setBrand(brand);
@@ -296,6 +398,7 @@ public class OrderDao extends DBContext {
 
         return order;
     }
+
     public List<Order> getAllOrders() {
         List<Order> orders = new ArrayList<>();
         String sql = "SELECT o.id AS order_id, o.orderDate, o.total, o.name AS order_name, o.phone, o.province, o.district, o.commune, o.detailedAddress, "
@@ -303,7 +406,8 @@ public class OrderDao extends DBContext {
                 + "s.id AS status_id, s.name AS status_name "
                 + "FROM Orders o "
                 + "JOIN Users u ON o.userId = u.id "
-                + "JOIN Status s ON o.statusId = s.id";
+                + "JOIN Status s ON o.statusId = s.id "
+                + "ORDER BY order_id DESC";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
@@ -339,7 +443,7 @@ public class OrderDao extends DBContext {
 
         return orders;
     }
-    
+
     public List<Status> getAllStatus() {
         List<Status> statuses = new ArrayList<>();
         String sql = "SELECT * FROM Status";
@@ -387,7 +491,7 @@ public class OrderDao extends DBContext {
 
         return lastOrderId;
     }
-    
+
     public List<Order> selectAllOrders() {
         List<Order> list = new ArrayList<>();
         String sql = "SELECT orderDate, total FROM Orders ORDER BY orderDate";
@@ -419,7 +523,7 @@ public class OrderDao extends DBContext {
             while (rs.next()) {
                 while (rs.next()) {
                     Order order = new Order();
-                     order.setDate(rs.getTimestamp("orderDate"));
+                    order.setDate(rs.getTimestamp("orderDate"));
                     order.setTotal(rs.getDouble("total"));
                     list.add(order);
                 }
@@ -431,16 +535,30 @@ public class OrderDao extends DBContext {
     }
 
     public static void main(String[] args) {
-        OrderDao orderdao = new OrderDao();
-        List<Order> listOrder = orderdao.getAllOrdersByUserId(2);
-        int oid = listOrder.size() + 1;
-        System.out.println(oid);
-        int id = orderdao.findLastOrderId(2);
-        System.out.println(id);
+        OrderDao orderDAO = new OrderDao();
+        int userId = 2; // Thay đổi userId tùy theo yêu cầu của bạn
+        List<Order> orders = orderDAO.getAllOrders();
 
-//        OrderDao od = new OrderDao();
-//        Order order = od.getOrderByOrderId(oid);
-//
-//        System.out.println(order.getDate());
+        // Hiển thị thông tin các đơn hàng và sản phẩm liên quan
+        for (Order order : orders) {
+            System.out.println("Order ID: " + order.getId());
+            System.out.println("Order Name: " + order.getName());
+            System.out.println("Order Date: " + order.getDate());
+            System.out.println("Order Total: " + order.getTotal());
+            System.out.println("Order Status: " + order.getStatusid().getStatus());
+            System.out.println("Order Details:");
+
+            for (OrderDetail orderDetail : order.getOrderDetails()) {
+                System.out.println("  Product ID: " + orderDetail.getPid().getId());
+                System.out.println("  Product Name: " + orderDetail.getPid().getName());
+                System.out.println("  Product Image: " + orderDetail.getPid().getImage());
+                System.out.println("  Product Price: " + orderDetail.getPrice());
+                System.out.println("  Product Quantity: " + orderDetail.getQuantity());
+                System.out.println("  Product Total: " + orderDetail.getTotal());
+                System.out.println();
+            }
+
+            System.out.println("-----------------------------------");
+        }
     }
 }

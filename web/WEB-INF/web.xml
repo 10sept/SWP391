@@ -108,6 +108,10 @@
         <servlet-name>ExportDataServlet</servlet-name>
         <servlet-class>Controller.ExportDataServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>FeedBackServlet</servlet-name>
+        <servlet-class>Controller.FeedBackServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AccountManagerment</servlet-name>
         <url-pattern>/accountmanagerment</url-pattern>
@@ -346,6 +350,10 @@
     <servlet-mapping>
         <servlet-name>ExportDataServlet</servlet-name>
         <url-pattern>/exportData</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FeedBackServlet</servlet-name>
+        <url-pattern>/feedback</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

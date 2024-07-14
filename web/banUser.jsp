@@ -125,7 +125,7 @@
                             <h5>Welcome ${sessionScope.acc.fullName}, Love to see you back.</h5>
 
                             <a href="banuser"><button class="btn btn-danger ">Cấm Tài Khoản Người Dùng</button></a>
-                            <a href="updaterole"><button class="btn btn-primary">Phân Quyền Nhân Viên</button></a>
+                            <a href="updaterole"><button class="btn btn-primary">Phân Quyền</button></a>
                         </div>
                     </div>
 

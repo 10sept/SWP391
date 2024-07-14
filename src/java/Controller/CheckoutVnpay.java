@@ -12,6 +12,15 @@ import Model.Cart;
 import Model.Order;
 import Model.ProductVariant;
 import Model.User;
+import jakarta.mail.Authenticator;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeUtility;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -19,11 +28,15 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Properties;
 
 /**
  *
@@ -99,19 +112,19 @@ public class CheckoutVnpay extends HttpServlet {
             order.setUserId(acc);
             order.setName(name);
             order.setPhone(phone);
-            order.setProvince(city); // Assuming 'city' represents province in this context
+            order.setProvince(city);
             order.setDistrict(district);
             order.setCommune(commune);
             order.setDetailedAddress(address);
             order.setDate(Date.from(currentDate.atZone(ZoneId.systemDefault()).toInstant()));
             order.setTotal(total);
-            order.setStatusid(orderDao.getStatusById(1)); // Assuming status ID 1 represents 'Pending' or similar
+            order.setStatusid(orderDao.getStatusById(1));
 
             // Add order details from cart items
             List<Model.OrderDetail> orderDetails = new ArrayList<>();
             for (Cart cart : cartList) {
                 Model.OrderDetail detail = new Model.OrderDetail();
-                detail.setPid(productDao.getProductById(cart.getPid())); // Assuming getPid() returns product ID
+                detail.setPid(productDao.getProductById(cart.getPid()));
 
                 // Retrieve and set ProductVariant
                 ProductVariant variant = productDao.getProductVariantByID(cart.getVariantId());
@@ -137,13 +150,17 @@ public class CheckoutVnpay extends HttpServlet {
             // Add the order to the database
             orderDao.addOrder(order);
 
-            // Get all orders
-            List<Order> listOrder = orderDao.getAllOrdersByUserId(acc.getId());
             int oid = orderDao.findLastOrderId(acc.getId());
             Date date = orderDao.getOrderByOrderId(oid).getDate();
 
             PaymentDao paymentDao = new PaymentDao();
             paymentDao.insertPayment(oid, 2, (java.sql.Date) date, (int) total);
+
+            try {
+                sendEmail(acc.getEmail(), order, cartList);
+            } catch (MessagingException | UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
 
             // Remove specific session attributes
             session.removeAttribute("fullname");
@@ -154,10 +171,73 @@ public class CheckoutVnpay extends HttpServlet {
             session.removeAttribute("address");
 
             response.sendRedirect("home");
-        }else{
+        } else {
             response.sendRedirect("home");
         }
-            
+
+    }
+
+    private void sendEmail(String to, Order order, List<Cart> cartList) throws MessagingException, UnsupportedEncodingException {
+        final String username = "HoLaTechSE1803@gmail.com";
+        final String password = "xgdm ytoa shxw iwdk";
+
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.mime.charset", "UTF-8");
+
+        Authenticator auth = new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, password);
+            }
+        };
+
+        Session session = Session.getInstance(props, auth);
+
+        Message message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(username));
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+        message.setSubject(MimeUtility.encodeText("Xác nhận đơn hàng", "UTF-8", "B"));
+
+        // Create the email content
+        StringBuilder emailContent = new StringBuilder();
+        emailContent.append("Cảm ơn bạn đã mua sắm tại HoLaTech!!!\n")
+                .append("Đây là đơn hàng chi tiết của bạn:\n\n")
+                .append("Tên người nhận: ").append(order.getName()).append("\n")
+                .append("Số điện thoại: ").append(order.getPhone()).append("\n")
+                .append("Địa chỉ: ").append(order.getDetailedAddress()).append(", ")
+                .append(order.getCommune()).append(", ")
+                .append(order.getDistrict()).append(", ")
+                .append(order.getProvince()).append("\n")
+                .append("Phương thức thanh toán: Đã thanh toán qua VNpay.\n\n");
+
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+
+        for (Model.OrderDetail detail : order.getOrderDetails()) {
+            String productColor = "";
+            for (Cart cart : cartList) {
+                if (cart.getPid() == detail.getPid().getId() && cart.getVariantId() == detail.getVariantId().getId()) {
+                    productColor = cart.getColorName();
+                    break;
+                }
+            }
+            emailContent.append("Tên sản phẩm: ").append(detail.getPid().getName())
+                    .append("\nMàu sắc: ").append(productColor)
+                    .append("\nSố lượng: ").append(detail.getQuantity())
+                    .append("\nGiá: ").append(currencyFormatter.format(detail.getPrice()))
+                    .append("\nTổng tiền của sản phẩm: ").append(currencyFormatter.format(detail.getTotal()))
+                    .append("\n\n");
+        }
+        emailContent.append("Tổng tiền đơn hàng: ").append(currencyFormatter.format(order.getTotal())).append("\n\n");
+        emailContent.append("Bạn sẽ sớm nhận được đơn hàng của mình.\n")
+                .append("Chúng tôi mong rằng bạn sẽ có những trải nghiệm tuyệt vời khi mua sắm tại HoLaTech!!!!");
+
+        message.setContent(emailContent.toString(), "text/plain; charset=UTF-8");
+
+        Transport.send(message);
     }
 
     /**

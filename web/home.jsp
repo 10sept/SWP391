@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -292,33 +293,43 @@
                                     <div class="products-slick" data-nav="#slick-nav-1">
                                         <!-- product -->
                                         <c:forEach var="lpc" items="${requestScope.listProductCategopry}">
-                                            <div class="product">
-                                                <div class="product-img">
-                                                    <img src="${lpc.image}" alt="">
-                                                    <div class="product-label">
-                                                        <span class="sale">-30%</span>
-                                                        <span class="new">NEW</span>
+                                            <c:if test="${lpc.isHidden == 0}">
+                                                <div class="col-md-4 col-xs-6">
+                                                    <div class="product">
+                                                        <div class="product-img">
+                                                            <img src="${lpc.image}" alt="">
+                                                            <div class="product-label">
+                                                                <span class="sale">-30%</span>
+                                                                <span class="new">NEW</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="product-body">
+                                                            <p class="product-category">${lpc.category.name}</p>
+                                                            <h3 class="product-name"><a href="productdetail?pid=${lpc.id}">${lpc.name}</a></h3>
+                                                            <h4 class="product-price">
+                                                                <fmt:formatNumber value="${lpc.price}" type="currency" maxFractionDigits="0" currencySymbol=""/>₫ 
+                                                                <del class="product-old-price">
+                                                                    <fmt:formatNumber value="${lpc.price + lpc.price*0.05}" type="currency" maxFractionDigits="0" currencySymbol=""/>₫
+                                                                </del>
+                                                            </h4>
+                                                            <div class="product-rating">
+                                                                <i class="fa fa-star"></i>
+                                                                <i class="fa fa-star"></i>
+                                                                <i class="fa fa-star"></i>
+                                                                <i class="fa fa-star"></i>
+                                                                <i class="fa fa-star"></i>
+                                                            </div>
+                                                            <div class="product-btns">
+                                                                <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
+                                                                <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
+                                                                <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="product-body">
-                                                    <p class="product-category">${lpc.category.name}</p>
-                                                    <h3 class="product-name"><a href="productdetail?pid=${lpc.id}">${lpc.name}</a></h3>
-                                                    <h4 class="product-price"> ${lpc.price}<del class="product-old-price">${lpc.price}</del></h4>
-                                                    <div class="product-rating">
-                                                        <i class="fa fa-star"></i>
-                                                        <i class="fa fa-star"></i>
-                                                        <i class="fa fa-star"></i>
-                                                        <i class="fa fa-star"></i>
-                                                        <i class="fa fa-star"></i>
-                                                    </div>
-                                                    <div class="product-btns">
-                                                        <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-                                                        <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-                                                        <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            </c:if>
                                         </c:forEach>
+
                                         <!-- /product -->    
                                     </div>
                                     <div id="slick-nav-1" class="products-slick-nav"></div>

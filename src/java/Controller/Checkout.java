@@ -30,11 +30,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 /**
@@ -134,8 +136,8 @@ public class Checkout extends HttpServlet {
         session.setAttribute("commune", commune);
         session.setAttribute("address", address);
 
-        LocalDateTime currentDate = LocalDateTime.now(); // Adjust to get current date/time properly
-        OrderDao orderDao = new OrderDao(); // Correct variable name from 'od' to 'orderDao'
+        LocalDateTime currentDate = LocalDateTime.now();
+        OrderDao orderDao = new OrderDao();
         if (paymentMethod == null) {
             session.setAttribute("messpayment", "bạn cần phải chọn 1 trong 2 phương thức thanh toán");
             response.sendRedirect("checkout");
@@ -146,19 +148,19 @@ public class Checkout extends HttpServlet {
             order.setUserId(acc);
             order.setName(name);
             order.setPhone(phone);
-            order.setProvince(city); // Assuming 'city' represents province in this context
+            order.setProvince(city);
             order.setDistrict(district);
             order.setCommune(commune);
             order.setDetailedAddress(address);
             order.setDate(Date.from(currentDate.atZone(ZoneId.systemDefault()).toInstant()));
             order.setTotal(total);
-            order.setStatusid(orderDao.getStatusById(1)); // Assuming status ID 1 represents 'Pending' or similar
+            order.setStatusid(orderDao.getStatusById(1));
 
             // Add order details from cart items
             List<OrderDetail> orderDetails = new ArrayList<>();
             for (Cart cart : cartList) {
                 OrderDetail detail = new OrderDetail();
-                detail.setPid(productDao.getProductById(cart.getPid())); // Assuming getPid() returns product ID
+                detail.setPid(productDao.getProductById(cart.getPid()));
 
                 // Retrieve and set ProductVariant
                 ProductVariant variant = productDao.getProductVariantByID(cart.getVariantId());
@@ -184,20 +186,22 @@ public class Checkout extends HttpServlet {
             // Add the order to the database
             orderDao.addOrder(order);
 
-            //get all order
-            OrderDao orderdao = new OrderDao();
-            List<Order> listOrder = orderdao.getAllOrdersByUserId(acc.getId());
+            // Get all orders
             int oid = orderDao.findLastOrderId(acc.getId());
-            Date date = orderdao.getOrderByOrderId(oid).getDate();
+            Date date = Date.from(currentDate.atZone(ZoneId.systemDefault()).toInstant());
 
             PaymentDao paymentdao = new PaymentDao();
 
-            paymentdao.insertPayment(oid, 1, (java.sql.Date) date, (int) total);
+            // Convert java.util.Date to java.sql.Date
+            java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+
+            paymentdao.insertPayment(oid, 1, sqlDate, (int) total);
+
             // Send confirmation email
             try {
-                sendEmail(acc.getEmail(), cartList, total);
+                sendEmail(acc.getEmail(), order, cartList);
             } catch (MessagingException | UnsupportedEncodingException e) {
-                e.printStackTrace(); // Handle email sending exception properly
+                e.printStackTrace();
             }
 
             // Redirect to home page or another appropriate page
@@ -213,7 +217,7 @@ public class Checkout extends HttpServlet {
         return LocalDateTime.now();
     }
 
-    private void sendEmail(String to, List<Cart> cartList, long total) throws MessagingException, UnsupportedEncodingException {
+    private void sendEmail(String to, Order order, List<Cart> cartList) throws MessagingException, UnsupportedEncodingException {
         final String username = "HoLaTechSE1803@gmail.com";
         final String password = "xgdm ytoa shxw iwdk";
 
@@ -240,20 +244,36 @@ public class Checkout extends HttpServlet {
 
         // Create the email content
         StringBuilder emailContent = new StringBuilder();
-        emailContent.append("Cảm ơn bạn đã mua sắm tại HoLaTech!!!\n Đây là đơn hàng chi tiết của bạn:\n\n");
+        emailContent.append("Cảm ơn bạn đã mua sắm tại HoLaTech!!!\n")
+                .append("Đây là đơn hàng chi tiết của bạn:\n\n")
+                .append("Tên người nhận: ").append(order.getName()).append("\n")
+                .append("Số điện thoại: ").append(order.getPhone()).append("\n")
+                .append("Địa chỉ: ").append(order.getDetailedAddress()).append(", ")
+                .append(order.getCommune()).append(", ")
+                .append(order.getDistrict()).append(", ")
+                .append(order.getProvince()).append("\n")
+                .append("Phương thức thanh toán: Thanh toán khi nhận hàng.\n\n");
 
-        for (Cart cart : cartList) {
-            emailContent.append("Tên sản phẩm: ").append(cart.getName())
-                    .append("\nMàu sắc: ").append(cart.getColorName())
-                    .append("\nSố lượng: ").append(cart.getQuantity())
-                    .append("\nGiá: ").append(cart.getPrice())
-                    .append("\nTổng tiền của sản phẩm: ").append(cart.getTotalOneProduct())
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+
+        for (OrderDetail detail : order.getOrderDetails()) {
+            String productColor = "";
+            for (Cart cart : cartList) {
+                if (cart.getPid() == detail.getPid().getId() && cart.getVariantId() == detail.getVariantId().getId()) {
+                    productColor = cart.getColorName();
+                    break;
+                }
+            }
+            emailContent.append("Tên sản phẩm: ").append(detail.getPid().getName())
+                    .append("\nMàu sắc: ").append(productColor)
+                    .append("\nSố lượng: ").append(detail.getQuantity())
+                    .append("\nGiá: ").append(currencyFormatter.format(detail.getPrice()))
+                    .append("\nTổng tiền của sản phẩm: ").append(currencyFormatter.format(detail.getTotal()))
                     .append("\n\n");
         }
-
-        emailContent.append("Tổng tiền đơn hàng: ").append(total).append("\n\n");
-        emailContent.append("Bạn sẽ sớm nhận được đơn hàng của mình.");
-        emailContent.append("Chúng tôi mong ràng bạn sẽ có những trải nghiệm tuyệt vời khi mua sắm tại HoLaTech!!!!");
+        emailContent.append("Tổng tiền đơn hàng: ").append(currencyFormatter.format(order.getTotal())).append("\n\n");
+        emailContent.append("Bạn sẽ sớm nhận được đơn hàng của mình.\n")
+                .append("Chúng tôi mong rằng bạn sẽ có những trải nghiệm tuyệt vời khi mua sắm tại HoLaTech!!!!");
 
         message.setContent(emailContent.toString(), "text/plain; charset=UTF-8");
 

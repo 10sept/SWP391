@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html lang="en">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>CellphoneS - Checkout</title>
+        <title>HolaTech - Checkout</title>
         <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
         <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css"/>
         <link type="text/css" rel="stylesheet" href="css/slick.css"/>
@@ -161,7 +162,7 @@
                                 <div class="section-title">
                                     <h3 class="title">Thông tin thanh toán</h3>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <input class="input" name="email" value="${sessionScope.acc.email}" readonly >
                                 </div>
@@ -208,7 +209,9 @@
                                     <c:forEach items="${requestScope.listcart}" var="c">
                                         <div class="order-col">
                                             <div>${c.quantity}x ${c.name}</div>
-                                            <div>${c.totalOneProduct}</div>
+                                            <div>
+                                                <fmt:formatNumber value="${c.totalOneProduct}" type="currency"  maxFractionDigits="0" currencySymbol=""/>₫
+                                            </div>
                                         </div>
                                     </c:forEach>
                                 </div>
@@ -218,8 +221,12 @@
                                 </div>
                                 <div class="order-col">
                                     <div><strong>TOTAL</strong></div>
-                                    <div><strong class="order-total">${requestScope.total}</strong></div>
-                                    
+                                    <div>
+                                        <strong class="order-total">
+                                            <fmt:formatNumber value="${requestScope.total}" type="currency"  maxFractionDigits="0" currencySymbol=""/>₫
+                                        </strong>
+                                    </div>
+
                                 </div>
                             </div>
                             <div class="payment-method">
@@ -238,7 +245,7 @@
                                     </label>
                                 </div>
                             </div>
-                                    <p style="color: red"> ${sessionScope.messpayment}</p>
+                            <p style="color: red"> ${sessionScope.messpayment}</p>
                             <button class="primary-btn order-submit">Đặt hàng</button>
 
                         </div>

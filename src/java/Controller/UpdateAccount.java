@@ -92,10 +92,29 @@ public class UpdateAccount extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        int id = Integer.parseInt(request.getParameter("id"));
+        String idStr = request.getParameter("id");
+
+        // Bảo toàn id trong trường hợp lỗi
+        String redirectURL = "updateaccount?id=" + idStr;
+
+        int id;
+        try {
+            id = Integer.parseInt(idStr);
+        } catch (NumberFormatException e) {
+            session.setAttribute("mess2", "ID không hợp lệ.");
+            response.sendRedirect("accountmanagerment");
+            return;
+        }
+
         AccountDao ad = new AccountDao();
         User u = ad.GetAccountById(id);
-        
+
+        if (u == null) {
+            session.setAttribute("mess2", "User không tồn tại.");
+            response.sendRedirect("accountmanagerment");
+            return;
+        }
+
         String fullName = request.getParameter("fullName");
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
@@ -112,15 +131,15 @@ public class UpdateAccount extends HttpServlet {
             java.util.Date currentDate = new java.util.Date();
             if (parsedDate.after(currentDate)) {
                 session.setAttribute("mess2", "Ngày sinh phải trước ngày hiện tại.");
-                response.sendRedirect("updateaccount");
-                return; // Important: return immediately after sendRedirect
+                response.sendRedirect(redirectURL);
+                return;
             }
 
             // Validate phone number format (10 digits starting with 0)
             if (!phone.matches("0\\d{9}")) {
                 session.setAttribute("mess2", "Số điện thoại không hợp lệ. Vui lòng nhập số điện thoại có 10 số và bắt đầu bằng số 0.");
-                response.sendRedirect("updateaccount");
-                return; // Important: return immediately after sendRedirect
+                response.sendRedirect(redirectURL);
+                return;
             }
 
             ad.UpdateProfileById(id, fullName, phone, address, dob, gender);
@@ -133,10 +152,7 @@ public class UpdateAccount extends HttpServlet {
             response.sendRedirect("accountmanagerment");
         } catch (ParseException e) {
             session.setAttribute("mess2", "Invalid date format. Please use yyyy-MM-dd.");
-            response.sendRedirect("updateaccount");
-        } catch (Exception e) {
-            session.setAttribute("mess2", "An error occurred while updating the account.");
-            response.sendRedirect("updateaccount");
+            response.sendRedirect(redirectURL);
         }
     }
 
